@@ -18,6 +18,7 @@ export class GameManager {
             if (existing.gameId) {
                 const game = this.games.get(existing.gameId);
                 game?.resume(existing);
+                user.gameId = existing.gameId;
             }
             return;
         }

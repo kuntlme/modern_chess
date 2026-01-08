@@ -14,12 +14,15 @@ setInterval(() => {
 
 wss.on("connection", function connection(ws, req) {
     // TEMP identity (replace with auth later)
+    console.log("url", req.url);
     const userId = new URL(req.url ?? "", "ws://localhost").searchParams.get("userId") ?? randomUUID()
     const user: User = {
         id: userId,
         socket: ws,
         lastSeen: Date.now(),
     }
+    
+    console.log("connected ",userId);
 
     ws.on("message", (data) => {
         let parsed: unknown;
@@ -41,7 +44,6 @@ wss.on("connection", function connection(ws, req) {
                 message: "Invalid client message",
             }))
         }
-
         gameManager.handleMessage(user, result.data);
     })
     ws.on("close", () => {
