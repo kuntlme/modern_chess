@@ -1,4 +1,5 @@
 "use client"
+import { ClientMessage } from "@/schema/clientMessageSchema";
 import { useEffect, useRef, useState } from "react";
 
 export function useGameSocket(userId: string) {
@@ -18,7 +19,7 @@ export function useGameSocket(userId: string) {
         }
     }, [userId]);
 
-    function send(message: unknown) { //TODO: make message type ClientMessage
+    function send(message: ClientMessage) { //TODO: make message type ClientMessage
         if (wsRef.current?.readyState === WebSocket.OPEN) {
             wsRef.current.send(JSON.stringify(message));
         }

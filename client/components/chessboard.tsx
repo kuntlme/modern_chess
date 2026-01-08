@@ -83,6 +83,7 @@
 
 "use client";
 import { GameState } from "@/lib/types";
+import { PromotionOption } from "@/schema/clientMessageSchema";
 import { Chessboard, ChessboardOptions } from "react-chessboard";
 
 function GameBoard({
@@ -90,7 +91,7 @@ function GameBoard({
   sendMove,
 }: {
   state: GameState;
-  sendMove: (from: string, to: string, promotion?: string) => void;
+  sendMove: (from: string, to: string, promotion: PromotionOption) => void;
 }) {
   if (state.status !== "PLAYING") return null;
 
@@ -109,7 +110,7 @@ function GameBoard({
         (piece.pieceType.startsWith("w") && rank === "8") ||
         (piece.pieceType.startsWith("b") && rank === "1")
 
-      const promotion = isPawn && isPromotion ? "n" : undefined;
+      const promotion = isPawn && isPromotion ? "n" : "";
 
       sendMove(sourceSquare, targetSquare, promotion);
       return true;

@@ -4,6 +4,7 @@ import { gameReducer } from "@/lib/gameReducer";
 import { useEffect, useReducer } from "react";
 import { useGameSocket } from "./useGameSocket";
 import { ServerMessage } from "@/schema/serverMessageSchema";
+import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export function useGame(userId: string) {
     const [state, dispatch] = useReducer(gameReducer, {
@@ -38,7 +39,7 @@ export function useGame(userId: string) {
         })
     }
 
-    function move(from: string, to: string, promotion: string = "") {
+    function move(from: string, to: string, promotion: PromotionOption) {
         if (!state.yourTurn) return;
 
         send({
