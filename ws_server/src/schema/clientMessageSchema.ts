@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+export const WatchGameShema = z.object({
+  type: z.literal("WATCH_GAME"),
+  payload: z.object({
+    gameId: z.uuid(),
+  })
+})
+
 export const InitGameSchema = z.object({
   type: z.literal("INIT_GAME"),
 });
@@ -22,7 +29,7 @@ export const ExitSchema = z.object({
   }),
 })
 
-export const ClientMessageSchema = z.discriminatedUnion("type", [InitGameSchema,MoveSchema, ExitSchema]);
+export const ClientMessageSchema = z.discriminatedUnion("type", [WatchGameShema, InitGameSchema,MoveSchema, ExitSchema]);
 
 export type ClientMessage = z.infer<typeof ClientMessageSchema>;
 export type MovePayload = z.infer<typeof MoveSchema>["payload"];

@@ -1,17 +1,21 @@
 "use client";
 import GameBoard from "@/components/chessboard";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useGame } from "@/hooks/useGame";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 export default function GamePage() {
   const params = useParams<{ userId: string }>();
   console.log(params.userId);
-  const { state, move } = useGame(params.userId);
+
+  const { state, move, initGame, watchGame } = useGame(params.userId);
+
+  const [gameId, setGameId] = useState<string>("");
 
   return (
     <main className="w-full h-screen flex min-h-screen items-center justify-center gap-30 bg-neutral-800 border">
-      {/* <pre className="text-white">{JSON.stringify(state)}</pre> */}
       <div className="border border-red-500 w-1/2">
         <GameBoard state={state} sendMove={move} />
       </div>
@@ -23,7 +27,9 @@ export default function GamePage() {
         <p>{state.winner ?? "null"}</p>
         <p>{state.yourTurn ? "yes" : "no"}</p>
 
-        <Button disabled={state.status != "IDLE"}>Play</Button>
+        <Button disabled={state.status != "IDLE"} onClick={() => initGame()}>INIT_GAME</Button>
+        <Input value={gameId} onChange={(e) => setGameId(e.target.value)}/>
+        <Button disabled={state.status != "IDLE"} onClick={() => watchGame(gameId)}>WATCH GAME</Button>
       </div>
     </main>
   );

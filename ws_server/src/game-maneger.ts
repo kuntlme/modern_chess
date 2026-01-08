@@ -28,6 +28,7 @@ export class GameManager {
             // INIT_GAME
             const gameId = randomUUID();
             const game = new Game(gameId, this.waitingUser, user);
+            console.log("gameId ", gameId);
             this.games.set(gameId, game);
             this.waitingUser = null;
         } else {
@@ -66,6 +67,18 @@ export class GameManager {
             }
             case "EXIT": {
                 //TODO:
+                break;
+            }
+            case "WATCH_GAME": {
+                const game = this.games.get(message.payload.gameId);
+                if(!game) {
+                    this.send(user, {
+                        type: "ERROR",
+                        message: "Invalid game ID",
+                    });
+                    return;
+                }
+                game.handleWatcher(user);
                 break;
             }
 

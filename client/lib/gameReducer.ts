@@ -6,6 +6,14 @@ export function gameReducer(
     message: ServerMessage,
 ): GameState {
     switch (message.type) {
+        case "WATCH_GAME": {
+            return {
+                ...state,
+                fen: message.payload.fen,
+                moves: message.payload.moves,
+                status: "PLAYING"
+            }
+        }
         case "INIT_GAME":
             return {
                 status: "PLAYING",

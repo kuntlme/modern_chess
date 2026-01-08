@@ -18,7 +18,7 @@ export function useGameSocket(userId: string) {
         }
     }, [userId]);
 
-    function send(message: unknown) {
+    function send(message: unknown) { //TODO: make message type ClientMessage
         if (wsRef.current?.readyState === WebSocket.OPEN) {
             wsRef.current.send(JSON.stringify(message));
         }

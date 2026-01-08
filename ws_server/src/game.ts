@@ -13,6 +13,8 @@ export class Game {
 
     private startTime: Date;
 
+    watchers = new Map<string, User>;
+
     constructor(id: string, white: User, black: User) {
         this.id = id;
         this.white = white;
@@ -83,6 +85,24 @@ export class Game {
         });
     }
 
+    handleWatcher(user: User){
+        const existing = this.watchers.get(user.id);
+        if(!existing) this.watchers.set(user.id, user);
+        this.send(user, {
+            type: "WATCH_GAME",
+            payload: {
+                fen: this.chess.fen(),
+                moves: this.moves,
+                turn: this.chess.turn(),
+            }
+        })
+    }
+
+    handleGameOver(){
+        const isDraw = this.chess.isDraw();
+        const gameOver = this.chess.isGameOver();
+    }
+
     resume(user: User) {
         this.send(user, {
             type: "RESUME_GAME",
@@ -107,6 +127,16 @@ export class Game {
     private broadcast(data: any) {
         this.send(this.white, data);
         this.send(this.black, data);
+        for(const [, watcher] of this.watchers){
+           this.send(watcher, {
+            type: "WATCH_GAME",
+            payload: {
+                fen: this.chess.fen(),
+                moves: this.moves,
+                turn: this.chess.turn(),
+            }
+           }) 
+        }
     }
 }
 

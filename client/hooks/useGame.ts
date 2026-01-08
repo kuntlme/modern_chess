@@ -21,9 +21,22 @@ export function useGame(userId: string) {
             const message: ServerMessage = JSON.parse(event.data);
             dispatch(message);
         })
-
-        send({ type: "INIT_GAME" });
     }, [connected]);
+
+    function initGame() {
+        if (!connected) return;
+        send({ type: "INIT_GAME" });
+    }
+
+    function watchGame(gameId: string) {
+        if(!connected || !gameId) return;
+        send({ 
+            type: "WATCH_GAME",
+            payload: {
+                gameId: gameId,
+            }
+        })
+    }
 
     function move(from: string, to: string, promotion: string = "") {
         if (!state.yourTurn) return;
@@ -38,5 +51,5 @@ export function useGame(userId: string) {
         })
     }
 
-    return { state, move };
+    return { state, move, initGame, watchGame };
 }
