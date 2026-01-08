@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { useEffect, useRef, useState } from "react";
 
 export function useGameSocket(userId: string) {
@@ -7,7 +6,8 @@ export function useGameSocket(userId: string) {
     const [connected, setConnected] = useState(false);
 
     useEffect(() => {
-        const ws = new WebSocket(process.env.WS_URL!);
+        console.log("url ", process.env.NEXT_PUBLIC_WS_URL)
+        const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}?userId=${userId}`);
         wsRef.current = ws;
 
         ws.onopen = () => setConnected(true);
@@ -19,10 +19,16 @@ export function useGameSocket(userId: string) {
     }, [userId]);
 
     function send(message: unknown) {
-        if(wsRef.current?.readyState === WebSocket.OPEN) {
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
             wsRef.current.send(JSON.stringify(message));
         }
     }
 
-    return {send, connected};
+    function onMessage(callback: (msg: MessageEvent) => void) {
+        if (wsRef.current) {
+            wsRef.current.onmessage = callback;
+        }
+    }
+
+    return { send, connected, onMessage };
 }

@@ -12,32 +12,31 @@ export function useGame(userId: string) {
         yourTurn: false,
     })
 
-    const { send, connected } = useGameSocket(userId);
+    const { send, connected, onMessage } = useGameSocket(userId);
 
     useEffect(() => {
-        if(!connected) return;
+        if (!connected) return;
 
-        const ws = (window as any).ws;
-        ws.onmessage = (event: MessageEvent) => {
+        onMessage((event: MessageEvent) => {
             const message: ServerMessage = JSON.parse(event.data);
             dispatch(message);
-        } 
+        })
 
-        send({type: "INIT_GAME"});
+        send({ type: "INIT_GAME" });
     }, [connected]);
 
-   function move(from: string, to:string, promotion: string = "") {
-    if(!state.yourTurn) return;
+    function move(from: string, to: string, promotion: string = "") {
+        if (!state.yourTurn) return;
 
-    send({
-        type: "MOVE",
-        payload: {
-            from,
-            to,
-            promotion
-        }
-    })
-   } 
+        send({
+            type: "MOVE",
+            payload: {
+                from,
+                to,
+                promotion
+            }
+        })
+    }
 
-   return {state, move};
+    return { state, move };
 }
