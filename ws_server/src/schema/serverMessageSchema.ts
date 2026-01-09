@@ -1,5 +1,16 @@
 import { z } from "zod";
 
+const gameOverReasonSchema = z.enum([
+      "CHECKMATE",
+      "STALEMATE",
+      "DRAW_BY_REPETITION",
+      "DRAW_BY_INSUFFICIENT_MATERIAL",
+      "DRAW_BY_FIFTY_MOVE_RULE",
+      "RESIGNATION",
+      "TIMEOUT",
+      "ABANDONED",
+    ])
+
 export const WatchGameSchema = z.object({
     type: z.literal("WATCH_GAME"),
     payload: z.object({
@@ -42,7 +53,7 @@ export const ResumeGameSchema = z.object({
 export const GameOverSchema = z.object({
     type: z.literal("GAME_OVER"),
     payload: z.object({
-        reason: z.string(),
+        reason: gameOverReasonSchema,
         winner: z.enum(["w", "b"]).nullable(),
     }),
 });
@@ -61,5 +72,6 @@ export const ServerMessageSchema = z.discriminatedUnion("type", [
     ErrorSchema,
 ]);
 
+export type GameOverReason = z.infer<typeof gameOverReasonSchema>;
 export type ErrorMessage = z.infer<typeof ErrorSchema>
 export type ServerMessage = z.infer<typeof ServerMessageSchema>

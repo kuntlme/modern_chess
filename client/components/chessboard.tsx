@@ -93,7 +93,7 @@ function GameBoard({
   state: GameState;
   sendMove: (from: string, to: string, promotion: PromotionOption) => void;
 }) {
-  if (state.status !== "PLAYING") return null;
+  if (state.status == "IDLE") return null;
 
   const chessboardOptions: ChessboardOptions = {
     position: state.fen,

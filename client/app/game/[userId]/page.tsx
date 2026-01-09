@@ -1,6 +1,7 @@
 "use client";
 import GameBoard from "@/components/chessboard";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useGame } from "@/hooks/useGame";
 import { useParams } from "next/navigation";
@@ -14,8 +15,15 @@ export default function GamePage() {
 
   const [gameId, setGameId] = useState<string>("");
 
+
   return (
     <main className="w-full h-screen flex min-h-screen items-center justify-center gap-30 bg-neutral-800 border">
+      <Dialog open={state.status === "ENDED"}>
+        <DialogContent>
+            <h1>Game Over</h1>
+            <p>Winner: {state.winner ?? "NONE"}</p>
+        </DialogContent>
+      </Dialog>
       <div className="border border-red-500 w-1/2">
         <GameBoard state={state} sendMove={move} />
       </div>

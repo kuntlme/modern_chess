@@ -1,7 +1,7 @@
 import { Chess } from "chess.js";
 import type { User } from "./types.js";
-import type { ServerMessage } from "./schema/serverMessageSchema.js";
-import type { MovePayload } from "./schema/clientMessageSchema.js";
+import type { GameOverReason, ServerMessage } from "./schema/serverMessageSchema.js";
+import type { ClientMessage, MovePayload } from "./schema/clientMessageSchema.js";
 
 export class Game {
     id: string;
@@ -78,16 +78,17 @@ export class Game {
         this.broadcast({
             type: "MOVE",
             payload: {
-                move: result,
+                uci: uci,
                 fen: this.chess.fen(),
                 moves: this.moves,
             },
         });
+        this.checkGameOver();
     }
 
-    handleWatcher(user: User){
+    handleWatcher(user: User) {
         const existing = this.watchers.get(user.id);
-        if(!existing) this.watchers.set(user.id, user);
+        if (!existing) this.watchers.set(user.id, user);
         this.send(user, {
             type: "WATCH_GAME",
             payload: {
@@ -98,9 +99,34 @@ export class Game {
         })
     }
 
-    handleGameOver(){
-        const isDraw = this.chess.isDraw();
-        const gameOver = this.chess.isGameOver();
+    checkGameOver() {
+        if (!this.chess.isGameOver()) return;
+        let reason: GameOverReason;
+        let winner: "w" | "b" | null = null;
+        if (this.chess.isCheckmate()) {
+            console.log("checkmate");
+            reason = "CHECKMATE";
+            winner = this.chess.turn() === "w" ? "b" : "w";
+        }
+        // TODO: add condition from Resingation & Timeout, winner: "w" or "b", "Abandaned" winner: null 
+        else if (this.chess.isStalemate()) {
+            reason = "STALEMATE";
+        } else if (this.chess.isThreefoldRepetition()) {
+            reason = "DRAW_BY_REPETITION";
+        } else if (this.chess.isInsufficientMaterial()) {
+            reason = "DRAW_BY_INSUFFICIENT_MATERIAL";
+        } else if (this.chess.isDrawByFiftyMoves()) {
+            reason = "DRAW_BY_FIFTY_MOVE_RULE";
+        } else {
+            console.error("Unknown reason for game over");
+            return;
+        }
+        this.broadcast({
+            type: "GAME_OVER",
+            payload: {
+                reason, winner
+            }
+        })
     }
 
     resume(user: User) {
@@ -124,18 +150,18 @@ export class Game {
         }
     }
 
-    private broadcast(data: any) {
+    private broadcast(data: ServerMessage) {
         this.send(this.white, data);
         this.send(this.black, data);
-        for(const [, watcher] of this.watchers){
-           this.send(watcher, {
-            type: "WATCH_GAME",
-            payload: {
-                fen: this.chess.fen(),
-                moves: this.moves,
-                turn: this.chess.turn(),
-            }
-           }) 
+        for (const [, watcher] of this.watchers) {
+            this.send(watcher, {
+                type: "WATCH_GAME",
+                payload: {
+                    fen: this.chess.fen(),
+                    moves: this.moves,
+                    turn: this.chess.turn(),
+                }
+            })
         }
     }
 }
