@@ -97,6 +97,7 @@ export class Game {
                 turn: this.chess.turn(),
             }
         })
+        this.checkGameOver();
     }
 
     checkGameOver() {

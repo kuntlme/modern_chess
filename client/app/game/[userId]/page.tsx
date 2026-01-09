@@ -5,7 +5,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useGame } from "@/hooks/useGame";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function GamePage() {
   const params = useParams<{ userId: string }>();
@@ -13,12 +13,20 @@ export default function GamePage() {
 
   const { state, move, initGame, watchGame } = useGame(params.userId);
 
+  const [gameOverShown, setGameOverShown] = useState<boolean>(false);
+
+  useEffect(() => {
+    if(state.status === "ENDED" && !gameOverShown) {
+      setGameOverShown(true);
+    }
+  }, [state, gameOverShown])
+
   const [gameId, setGameId] = useState<string>("");
 
 
   return (
     <main className="w-full h-screen flex min-h-screen items-center justify-center gap-30 bg-neutral-800 border">
-      <Dialog open={state.status === "ENDED"}>
+      <Dialog open={gameOverShown} onOpenChange={setGameOverShown}>
         <DialogContent>
             <h1>Game Over</h1>
             <p>Winner: {state.winner ?? "NONE"}</p>
