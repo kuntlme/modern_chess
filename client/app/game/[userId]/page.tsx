@@ -28,12 +28,12 @@ export default function GamePage() {
         <GameBoard state={state} sendMove={move} />
       </div>
       <div className="h-full flex flex-col w-1/3 border text-white">
-        <p>{state.color}</p>
+        <p>color: {state.color}</p>
         <p>{state.fen}</p>
-        <p>{state.moves}</p>
-        <p>{state.status}</p>
-        <p>{state.winner ?? "null"}</p>
-        <p>{state.yourTurn ? "yes" : "no"}</p>
+        <p>moves: {state.moves}</p>
+        <p>status: {state.status}</p>
+        <p>winner: {state.winner ?? "null"}</p>
+        <p>yourTurn: {state.yourTurn ? "yes" : "no"}</p>
 
         <Button disabled={state.status != "IDLE"} onClick={() => initGame()}>INIT_GAME</Button>
         <Input value={gameId} onChange={(e) => setGameId(e.target.value)}/>
