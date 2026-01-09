@@ -154,14 +154,7 @@ export class Game {
         this.send(this.white, data);
         this.send(this.black, data);
         for (const [, watcher] of this.watchers) {
-            this.send(watcher, {
-                type: "WATCH_GAME",
-                payload: {
-                    fen: this.chess.fen(),
-                    moves: this.moves,
-                    turn: this.chess.turn(),
-                }
-            })
+            this.send(watcher, data);
         }
     }
 }
