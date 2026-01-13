@@ -84,19 +84,25 @@
 "use client";
 import { GameState } from "@/lib/types";
 import { PromotionOption } from "@/schema/clientMessageSchema";
+import { Chess } from "chess.js";
+import { useEffect, useState } from "react";
 import { Chessboard, ChessboardOptions } from "react-chessboard";
 
 function GameBoard({
   state,
   sendMove,
+  currentMove,
 }: {
   state: GameState;
   sendMove: (from: string, to: string, promotion: PromotionOption) => void;
+  currentMove: number | null;
 }) {
   if (state.status == "IDLE") return null;
 
+  const [currentFen, setCurrentFen] = useState<string>();
+
   const chessboardOptions: ChessboardOptions = {
-    position: state.fen,
+    position: currentFen,
     boardOrientation: state.color == "w" ? "white" : "black",
     onPieceDrop: ({ piece, sourceSquare, targetSquare }) => {
       if (!state.yourTurn) return false;
@@ -106,9 +112,9 @@ function GameBoard({
       const isPawn = piece.pieceType.endsWith("P");
       const rank = targetSquare[1];
 
-      const isPromotion = 
+      const isPromotion =
         (piece.pieceType.startsWith("w") && rank === "8") ||
-        (piece.pieceType.startsWith("b") && rank === "1")
+        (piece.pieceType.startsWith("b") && rank === "1");
 
       const promotion = isPawn && isPromotion ? "n" : "";
 
@@ -117,7 +123,25 @@ function GameBoard({
     },
   };
 
-  return <Chessboard options={chessboardOptions}/>;
+  // update ui to show previous position
+  useEffect(() => {
+    if(currentMove){
+    const currentGame = new Chess();
+    for (let i = 0; i <= currentMove; i++) {
+      currentGame.move(state.moves[i]);
+    }
+    setCurrentFen(currentGame.fen());
+  }
+    
+  }, [currentMove]);
+
+  useEffect(() => {
+    if(state.fen){
+      setCurrentFen(state.fen)
+    }
+  }, [state]);
+
+  return <Chessboard options={chessboardOptions} />;
 }
 
 export default GameBoard;
