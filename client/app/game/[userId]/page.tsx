@@ -17,7 +17,7 @@ export default function GamePage() {
 
   const [gameOverShown, setGameOverShown] = useState<boolean>(false);
 
-  const [currentMove, setCurrentMove] = useState<number | null>(null);
+  const [currentMove, setCurrentMove] = useState<number>(-1);
 
   // update game over ui
   useEffect(() => {

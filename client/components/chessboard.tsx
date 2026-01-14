@@ -20,9 +20,16 @@ function GameBoard({
 
   const chessboardOptions: ChessboardOptions = {
     position: currentFen,
-    boardOrientation: state.color == "w" ? "white" : "black",
+    boardOrientation: state.color == "b" ? "black" : "white",
     canDragPiece: ({ piece, square }) => {
-      return (state.status === "PLAYING"  && state.yourTurn && state.color && currentMove == state.moves.length - 1) ?? false;
+      console.log(piece.pieceType);
+      return (
+        (state.status === "PLAYING" &&
+          state.yourTurn &&
+          currentMove === state.moves.length - 1 &&
+          piece.pieceType[0] === state.color) ??
+        false
+      );
     },
     onPieceDrop: ({ piece, sourceSquare, targetSquare }) => {
       if (!state.yourTurn || currentMove != state.moves.length - 1)
@@ -38,7 +45,7 @@ function GameBoard({
         (piece.pieceType.startsWith("b") && rank === "1");
 
       const promotion = isPawn && isPromotion ? "n" : "";
-
+      console.log(sourceSquare, targetSquare, promotion);
       sendMove(sourceSquare, targetSquare, promotion);
       return true;
     },
