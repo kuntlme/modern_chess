@@ -24,17 +24,27 @@ const MoveBoard = ({
   return (
     <div className="flex flex-col justify-center gap-2">
       <div className="flex flex-wrap w-full justify-between items-center gap-2 flex-6">
+        <div
+          className={cn(
+            currentMove != null && currentMove == -1 ? "bg-neutral-700" : "",
+            "p-2 rounded-lg cursor-pointer"
+          )}
+          onClick={() => setCurrentMove(-1)}
+        >
+          S
+        </div>
         {Array.isArray(moves) &&
           moves.map((move, idx) => {
             return (
               <div
-                id={idx.toString()}
+                key={idx.toString()}
                 className={cn(
                   currentMove != null && idx === currentMove
-                    ? "bg-neutral-500"
+                    ? "bg-neutral-700"
                     : "",
-                  "p-2 rounded-lg"
+                  "p-2 rounded-lg cursor-pointer"
                 )}
+                onClick={() => setCurrentMove(idx)}
               >
                 {move}
               </div>
@@ -43,7 +53,7 @@ const MoveBoard = ({
       </div>
       <div className="flex justify-between items-center">
         <Button
-          disabled={currentMove === null || currentMove === 0}
+          disabled={currentMove === null || currentMove === -1}
           onClick={() => currentMove != null && setCurrentMove(currentMove - 1)}
         >
           <ArrowLeft className="size-5" />

@@ -27,7 +27,7 @@ export default function GamePage() {
   }, [state, gameOverShown]);
 
   const [gameId, setGameId] = useState<string>("");
- 
+
   return (
     <main className="w-full h-screen flex min-h-screen items-center justify-center gap-30 bg-neutral-800 border">
       <Dialog open={gameOverShown} onOpenChange={setGameOverShown}>
@@ -37,7 +37,7 @@ export default function GamePage() {
         </DialogContent>
       </Dialog>
       <div className="border border-red-500 w-1/2">
-        <GameBoard state={state} sendMove={move} currentMove={currentMove}/>
+        <GameBoard state={state} sendMove={move} currentMove={currentMove} />
       </div>
       <div className="h-full flex flex-col gap-3 w-1/3 border text-white p-5">
         <p>color: {state.color}</p>

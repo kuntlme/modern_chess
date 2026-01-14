@@ -105,7 +105,8 @@ function GameBoard({
     position: currentFen,
     boardOrientation: state.color == "w" ? "white" : "black",
     onPieceDrop: ({ piece, sourceSquare, targetSquare }) => {
-      if (!state.yourTurn) return false;
+      if (!state.yourTurn || currentMove != state.moves.length - 1)
+        return false;
 
       if (!piece || !sourceSquare || !targetSquare) return false;
 
@@ -125,19 +126,20 @@ function GameBoard({
 
   // update ui to show previous position
   useEffect(() => {
-    if(currentMove){
-    const currentGame = new Chess();
-    for (let i = 0; i <= currentMove; i++) {
-      currentGame.move(state.moves[i]);
+    if (currentMove != null) {
+      const currentGame = new Chess();
+      if (currentMove != -1) {
+        for (let i = 0; i <= currentMove; i++) {
+          currentGame.move(state.moves[i]);
+        }
+      }
+      setCurrentFen(currentGame.fen());
     }
-    setCurrentFen(currentGame.fen());
-  }
-    
   }, [currentMove]);
 
   useEffect(() => {
-    if(state.fen){
-      setCurrentFen(state.fen)
+    if (state.fen) {
+      setCurrentFen(state.fen);
     }
   }, [state]);
 
