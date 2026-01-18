@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { useGame } from "@/hooks/useGame";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import PromoBoard from "@/components/promoboard";
+import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export default function GamePage() {
   const params = useParams<{ userId: string }>();
@@ -19,6 +21,15 @@ export default function GamePage() {
 
   const [currentMove, setCurrentMove] = useState<number>(-1);
 
+  const [isPromotion, setIsPromotion] = useState<boolean>(false);
+
+  const [promoPiece, setPromoPiece] = useState<PromotionOption>("");
+
+  const [pendingMove, setPendingMove] = useState<{
+    from: string;
+    to: string;
+  } | null>(null);
+
   // update game over ui
   useEffect(() => {
     if (state.status === "ENDED" && !gameOverShown) {
@@ -28,8 +39,23 @@ export default function GamePage() {
 
   const [gameId, setGameId] = useState<string>("");
 
+  const handlePromotionRequired = (from: string, to: string) => {
+    setPendingMove({ from, to });
+    setIsPromotion(true);
+  };
+
+  useEffect(() => {
+    if (promoPiece && pendingMove) {
+      move(pendingMove.from, pendingMove.to, promoPiece);
+      setPendingMove(null);
+      setPromoPiece("");
+      setIsPromotion(false);
+    }
+  }, [promoPiece]);
+
   return (
     <main className="w-full h-screen flex min-h-screen items-center justify-center gap-30 bg-neutral-800 border">
+      <PromoBoard isPromotion={isPromotion} setPromoPiece={setPromoPiece} />
       <Dialog open={gameOverShown} onOpenChange={setGameOverShown}>
         <DialogContent>
           <h1>Game Over</h1>
@@ -37,7 +63,14 @@ export default function GamePage() {
         </DialogContent>
       </Dialog>
       <div className="border border-red-500 w-1/2">
-        <GameBoard state={state} sendMove={move} currentMove={currentMove} />
+        <GameBoard
+          state={state}
+          sendMove={move}
+          currentMove={currentMove}
+          promoPiece={promoPiece}
+          setIsPromotion={setIsPromotion}
+          onPromotionRequired={handlePromotionRequired}
+        />
       </div>
       <div className="h-full flex flex-col gap-3 w-1/3 border text-white p-5">
         <p>color: {state.color}</p>

@@ -2,17 +2,23 @@
 import { GameState } from "@/lib/types";
 import { PromotionOption } from "@/schema/clientMessageSchema";
 import { Chess } from "chess.js";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Chessboard, ChessboardOptions } from "react-chessboard";
 
 function GameBoard({
   state,
   sendMove,
   currentMove,
+  promoPiece,
+  setIsPromotion,
+  onPromotionRequired
 }: {
   state: GameState;
   sendMove: (from: string, to: string, promotion: PromotionOption) => void;
   currentMove: number | null;
+  promoPiece: PromotionOption;
+  setIsPromotion: React.Dispatch<React.SetStateAction<boolean>>;
+  onPromotionRequired: (sourcePiece: string, targetPiece: string) => void;
 }) {
   if (state.status == "IDLE") return null;
 
@@ -44,9 +50,12 @@ function GameBoard({
         (piece.pieceType.startsWith("w") && rank === "8") ||
         (piece.pieceType.startsWith("b") && rank === "1");
 
-      const promotion = isPawn && isPromotion ? "n" : "";
-      console.log(sourceSquare, targetSquare, promotion);
-      sendMove(sourceSquare, targetSquare, promotion);
+      if (isPawn && isPromotion) {
+        onPromotionRequired(sourceSquare, targetSquare);
+        return true;
+      }
+      // const promotion = isPawn && isPromotion ? "n" : "";
+      sendMove(sourceSquare, targetSquare, "");
       return true;
     },
   };
