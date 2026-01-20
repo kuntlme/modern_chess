@@ -9,15 +9,11 @@ function GameBoard({
   state,
   sendMove,
   currentMove,
-  promoPiece,
-  setIsPromotion,
   onPromotionRequired
 }: {
   state: GameState;
   sendMove: (from: string, to: string, promotion: PromotionOption) => void;
   currentMove: number | null;
-  promoPiece: PromotionOption;
-  setIsPromotion: React.Dispatch<React.SetStateAction<boolean>>;
   onPromotionRequired: (sourcePiece: string, targetPiece: string) => void;
 }) {
   if (state.status == "IDLE") return null;
@@ -50,11 +46,11 @@ function GameBoard({
         (piece.pieceType.startsWith("w") && rank === "8") ||
         (piece.pieceType.startsWith("b") && rank === "1");
 
+      // pawn promotion
       if (isPawn && isPromotion) {
         onPromotionRequired(sourceSquare, targetSquare);
         return true;
       }
-      // const promotion = isPawn && isPromotion ? "n" : "";
       sendMove(sourceSquare, targetSquare, "");
       return true;
     },

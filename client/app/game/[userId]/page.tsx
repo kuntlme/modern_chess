@@ -1,5 +1,4 @@
 "use client";
-import { Chess } from "chess.js";
 import GameBoard from "@/components/chessboard";
 import MoveBoard from "@/components/moveboard";
 import { Button } from "@/components/ui/button";
@@ -67,8 +66,6 @@ export default function GamePage() {
           state={state}
           sendMove={move}
           currentMove={currentMove}
-          promoPiece={promoPiece}
-          setIsPromotion={setIsPromotion}
           onPromotionRequired={handlePromotionRequired}
         />
       </div>
