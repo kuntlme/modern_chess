@@ -5,6 +5,7 @@ import {
   apiAuthPrefix,
   publicRoutes,
   authRoutes,
+  landingPageRoute,
 } from "@/routes";
 import authConfig from "./lib/auth.config";
 
@@ -20,6 +21,10 @@ export default auth((req) => {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  const isLandingRoute = nextUrl.pathname == landingPageRoute;
+
+  if(isLandingRoute) return null;
 
   if (isApiAuthRoute) {
     return null;
