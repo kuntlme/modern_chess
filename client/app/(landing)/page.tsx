@@ -1,12 +1,9 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/feature/auth/hooks/use-current-user";
 import Container from "@/feature/landing/components/Container";
+import FeatureCards from "@/feature/landing/components/feature";
 import HeroSection from "@/feature/landing/components/hero";
-import LandingChessBoard from "@/feature/landing/components/landing-chessboard";
 import Navbar from "@/feature/landing/components/navbar";
-import Image from "next/image";
-import { Chessboard } from "react-chessboard";
 
 export default function Home() {
   const currentUser = useCurrentUser();
@@ -16,6 +13,7 @@ export default function Home() {
         <Navbar />
       </Container>
       <HeroSection />
+      <FeatureCards />
     </div>
   );
 }
