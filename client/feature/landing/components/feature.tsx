@@ -18,7 +18,7 @@ import {
 
 const FeatureCards = () => {
   return (
-    <Container className="space-y-10 pt-10">
+    <Container className="space-y-10 py-10">
       <div className="flex justify-center">
         <div className="w-full flex items-center">
           <div className="h-px w-full bg-linear-to-r to-neutral-500/30 from-transparent"></div>
@@ -35,7 +35,7 @@ const FeatureCards = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center gap-10 w-full pb-100">
+      <div className="flex justify-center items-center gap-10 w-full">
         <Card className="relative w-1/3 h-145 bg-gray-950 border-gray-800 rounded-4xl group hover:border-gray-600/60 hover:bg-linear-to-b hover:from-green-700/5 hover:to-transparent duration-500 ease-in-out">
           {/* background animation element */}
           <div className="absolute w-full h-full flex justify-center items-center">

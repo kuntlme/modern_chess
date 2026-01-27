@@ -59,13 +59,7 @@ const HeroSection = () => {
                 </a>
         </div>
 
-        <div className="flex items-center justify-center mt-20">
-          <div className="w-full h-px bg-linear-to-r from-transparent to-cyan-500"></div>
-          <div className="border border-cyan-500 p-2 rounded-full">
-            <div className="size-3 bg-cyan-400 rounded-full animate-pulse"></div>
-          </div>
-          <div className="w-full h-px bg-linear-to-r from-cyan-500 to-transparent"></div>
-        </div>
+
       </Container>
   )
 }
