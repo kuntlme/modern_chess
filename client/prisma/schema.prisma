@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
@@ -14,35 +8,35 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
- 
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
- 
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@map("sessions")
 }
- 
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -51,15 +45,77 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
- 
+  gamesAsWhite         Game[] @relation("WhitePlayer")
+  gamesAsBlack         Game[] @relation("BlackPlayer")
+
   @@map("users")
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Game {
+  id String @id @default(uuid())
+
+  whiteId String
+  blackId String
+
+  white User @relation("WhitePlayer", fields: [whiteId], references: [id])
+  black User @relation("BlackPlayer", fields: [blackId], references: [id])
+
+  status GameStatus  @default(ONGOING)
+  winner GameWinner?
+
+  fen       String? // snapshot cache ONLY
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  moves      Move[]
+  gameResult GameResult?
+
+  @@index([whiteId])
+  @@index([blackId])
+}
+
+enum GameStatus {
+  ONGOING
+  ENDED
+  ABANDONED
+}
+
+enum GameWinner {
+  WHITE
+  BLACK
+  DRAW
+}
+
+model Move {
+  id     String @id @default(uuid())
+  gameId String
+
+  moveUci String // e2e4, e7e8q
+  moveNo  Int
+
+  createdAt DateTime @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, moveNo])
+  @@index([gameId])
+}
+
+model GameResult {
+  id     String @id @default(uuid())
+  gameId String @unique
+
+  reason String // checkmate, timeout, resign
+  pgn    String?
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 }
