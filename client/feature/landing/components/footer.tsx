@@ -104,11 +104,11 @@ const Footer = () => {
             <p className="text-neutral-300 font-semibold">MAP</p>
             {Array.isArray(mapLinks) &&
               mapLinks.map((link, idx) => (
-                <div className="flex justify-between">
-                  <Link href={link.href} key={idx} className="text-neutral-500">
+                <div className="flex justify-between group">
+                  <Link href={link.href} key={idx} className="text-neutral-500 group-hover:text-neutral-400 duration-500 ease-in-out">
                     {link.name}
                   </Link>
-                  <ChevronRight size={20} className="size-4 text-red-600" />
+                  <ChevronRight size={20} className="size-4 text-red-600/50 group-hover:text-red-500 duration-500 ease-in-out" />
                 </div>
               ))}
           </div>
@@ -116,11 +116,11 @@ const Footer = () => {
             <p className="text-neutral-300 font-semibold">COMPANY</p>
             {Array.isArray(companyLinks) &&
               companyLinks.map((link, idx) => (
-                <div className="flex justify-between">
-                  <Link href={link.href} key={idx} className="text-neutral-500">
+                <div className="flex justify-between group">
+                  <Link href={link.href} key={idx} className="text-neutral-500 group-hover:text-neutral-400 duration-500 ease-in-out">
                     {link.name}
                   </Link>
-                  <ChevronRight size={20} className="size-4 text-red-500" />
+                  <ChevronRight size={20} className="size-4 text-red-500/50 group-hover:text-red-500" />
                 </div>
               ))}
           </div>
@@ -128,11 +128,11 @@ const Footer = () => {
             <p className="text-neutral-300 font-semibold">LEGAL</p>
             {Array.isArray(legalLinks) &&
               legalLinks.map((link, idx) => (
-                <div className="flex justify-between">
-                  <Link href={link.href} key={idx} className="text-neutral-500">
+                <div className="flex justify-between group">
+                  <Link href={link.href} key={idx} className="text-neutral-500 group-hover:text-neutral-400 duration-500 ease-in-out">
                     {link.name}
                   </Link>
-                  <ChevronRight size={20} className="size-4 text-red-500" />
+                  <ChevronRight size={20} className="size-4 text-red-500/50 group-hover:text-red-500" />
                 </div>
               ))}
           </div>
@@ -140,7 +140,7 @@ const Footer = () => {
       </div>
 
       <div className="w-full flex justify-center items-center py-10">
-        <p className="select-none text-9xl font-bold  bg-clip-text bg-linear-to-b from-red-700 to-white">
+        <p className="select-none text-[130px] font-extrabold text-transparent  bg-clip-text bg-linear-to-b from-neutral-700 to-transparent">
           PLAY. THINK. WIN.
         </p>
       </div>
