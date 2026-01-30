@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DataTable from "@/feature/dashboard/components/data-table";
 import { cn } from "@/lib/utils";
-import { Crown, SquareStack, Star, Table } from "lucide-react";
+import { ChartPie, Crown, SquareStack, Star, Table } from "lucide-react";
 import Image from "next/image";
+import { data, columns } from "@/feature/dashboard/home/table-info";
 
 const page = () => {
   const items = [
@@ -81,9 +82,20 @@ const page = () => {
         ))}
       </div>
 
-      {/* Table  */}
-      <div className="w-2/3 border">
-        <DataTable />
+
+
+      <div className="w-2/3 pt-10">
+        <div className="flex justify-start items-center gap-2 w-full">
+          <ChartPie
+            className="size-6 text-neutral-500"
+            strokeWidth={"2px"}
+          />
+          <h2 className="text-2xl font-semibold text-neutral-500">
+            Resent Games
+          </h2>
+        </div>
+        {/* Table  */}
+        <DataTable data={data} columns={columns} />
       </div>
     </div>
   );
