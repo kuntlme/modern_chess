@@ -30,11 +30,12 @@ import {
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const items = [
   {
     label: "Dashboard",
-    href: "/dashboard/home",
+    href: "/dashboard",
     icon: <LayoutDashboard />,
   },
   {
@@ -64,8 +65,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [showFooterDetails, setShowFooterDetails] = useState(open);
 
   useEffect(() => {
-  if (open) setShowFooterDetails(true);
-}, [open]);
+    if (open) setShowFooterDetails(true);
+  }, [open]);
 
   const sidebarVarient = {
     open: {
@@ -88,7 +89,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         >
           <SidebarHeader className="pt-5 shrink-0">
             <div className="flex gap-2 w-full">
-              {open ? (<ChessKing className="size-7 shrink-0" />) : (<SidebarTrigger className="size-8"/>)}
+              {open ? (
+                <ChessKing className="size-7 shrink-0" />
+              ) : (
+                <SidebarTrigger className="size-8" />
+              )}
               <motion.div
                 variants={sidebarVarient}
                 animate={open ? "open" : "closed"}
@@ -120,44 +125,59 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </SidebarContent>
 
           <SidebarFooter className="px-0 pb-0 shrink-0">
-            <div
-              className={cn(
-                "flex items-center rounded-2xl shrink-0 transition-all duration-300",
-                showFooterDetails
-                  ? "gap-2 bg-neutral-200 px-4 py-2 justify-start"
-                  : "pb-2 bg-sidebar justify-center",
-              )}
-            >
-              <Avatar className={cn("bg-neutral-300 flex justify-center items-center shrink-0 transition-all duration-300 ", open ? "size-10": "size-8")}>
-                <User className="text-black" />
-              </Avatar>
-              <AnimatePresence onExitComplete={() => setShowFooterDetails(false)}>
-               {open && <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex items-center gap-3 justify-between"
+            <DropdownMenu>
+              <DropdownMenuTrigger disabled={!open}>
+              <div
+                className={cn(
+                  "flex items-center rounded-t-2xl shrink-0 transition-all duration-300",
+                  showFooterDetails
+                    ? "gap-2 bg-neutral-200 px-4 py-2 justify-start"
+                    : "pb-2 bg-sidebar justify-center",
+                )}
+              >
+                <Avatar
+                  className={cn(
+                    "bg-neutral-300 flex justify-center items-center shrink-0 transition-all duration-300 ",
+                    open ? "size-10" : "size-8",
+                  )}
                 >
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-md text-neutral-900/70 font-medium">
-                      Player1
-                    </span>
-                    <div className="w-fit flex gap-1 justify-between items-center bg-yellow-500/30 border border-yellow-500 rounded-full px-2 py-0.5">
-                      <Star size={12} className="text-yellow-700" />
-                      <span className="text-xs text-yellow-700">59</span>
-                    </div>
-                  </div>
-
-                  <LogOut className="text-red-500" />
-                </motion.div>}
-              </AnimatePresence>
-            </div>
+                  <User className="text-black size-5" />
+                </Avatar>
+                <AnimatePresence
+                  onExitComplete={() => setShowFooterDetails(false)}
+                >
+                  {open && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex items-center gap-3 justify-between"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-md text-neutral-900/70 font-medium">
+                          Player1
+                        </span>
+                        <div className="w-fit flex gap-1 justify-between items-center bg-yellow-500/30 border border-yellow-500 rounded-full px-2 py-0.5">
+                          <Star size={12} className="text-yellow-700" />
+                          <span className="text-xs text-yellow-700">59</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                  <DropdownMenuItem className="text-red-700 bg-red-400/30 m-0">
+                    <LogOut className="text-red-700"/>
+                    Log Out
+                  </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarFooter>
         </Sidebar>
-        <div className="rounded-tl-4xl bg-neutral-300 w-full flex justify-center items-center p-5">
-          {children}
-        </div>
+        <div className="rounded-tl-xl bg-background w-full p-5">{children}</div>
       </div>
     </SidebarProvider>
   );
