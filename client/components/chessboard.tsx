@@ -75,7 +75,14 @@ function GameBoard({
     }
   }, [state]);
 
-  return <Chessboard options={chessboardOptions} />;
+  return (
+  <div className="w-full h-full max-h-[calc(100vh-80px)] max-w-[60vw] aspect-square">
+    <Chessboard
+      options={chessboardOptions}
+    />
+  </div>
+);
+
 }
 
 export default GameBoard;

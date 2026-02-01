@@ -6,14 +6,14 @@ import { useGameSocket } from "./useGameSocket";
 import { ServerMessage } from "@/schema/serverMessageSchema";
 import { PromotionOption } from "@/schema/clientMessageSchema";
 
-export function useGame(userId: string) {
+export function useGame() {
     const [state, dispatch] = useReducer(gameReducer, {
         status: "IDLE",
         moves: [],
         yourTurn: false,
     })
 
-    const { send, connected, onMessage } = useGameSocket(userId);
+    const { send, connected, onMessage } = useGameSocket();
 
     useEffect(() => {
         if (!connected) return;

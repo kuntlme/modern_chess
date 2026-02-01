@@ -2,22 +2,37 @@
 import { ClientMessage } from "@/schema/clientMessageSchema";
 import { useEffect, useRef, useState } from "react";
 
-export function useGameSocket(userId: string) {
+export function useGameSocket() {
     const wsRef = useRef<WebSocket | null>(null);
     const [connected, setConnected] = useState(false);
 
+    const [token, setToken] = useState<string>("");
+
     useEffect(() => {
-        console.log("url ", process.env.NEXT_PUBLIC_WS_URL)
-        const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}?userId=${userId}`);
-        wsRef.current = ws;
+        const loadToken = async () => {
+            const res = await fetch("/api/auth/token");
+            if (!res.ok) throw new Error("No token");
+            const { wsToken } = await res.json();
+            console.log(wsToken)
+            setToken(wsToken);
+        };
+        loadToken();
+    }, []);
 
-        ws.onopen = () => setConnected(true);
-        ws.onclose = () => setConnected(false);
+    useEffect(() => {
+        if (token) {
+            console.log("url ", process.env.NEXT_PUBLIC_WS_URL)
+            const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}?token=${encodeURIComponent(token)}`);
+            wsRef.current = ws;
 
-        return () => {
-            ws.close();
+            ws.onopen = () => setConnected(true);
+            ws.onclose = () => setConnected(false);
+
+            return () => {
+                ws.close();
+            }
         }
-    }, [userId]);
+    }, [token]);
 
     function send(message: ClientMessage) { //TODO: make message type ClientMessage
         if (wsRef.current?.readyState === WebSocket.OPEN) {

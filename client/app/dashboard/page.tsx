@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ChartPie, Crown, SquareStack, Star, Table } from "lucide-react";
 import Image from "next/image";
 import { data, columns } from "@/feature/dashboard/home/table-info";
+import PlayButton from "@/feature/dashboard/components/play-button";
 
 const page = () => {
   const items = [
@@ -50,9 +51,7 @@ const page = () => {
           className="w-1/3 h-full flex flex-col justify-center gap-3
                         backdrop-blur px-3"
         >
-          <Button className="text-5xl font-semibold text-neutral-700/90 py-5 h-30 rounded-2xl">
-            Play
-          </Button>
+          <PlayButton />
           <Button
             variant="secondary"
             className="text-3xl font-semibold py-5 h-30 rounded-2xl text-neutral-500 border border-secondary"
@@ -82,14 +81,9 @@ const page = () => {
         ))}
       </div>
 
-
-
       <div className="w-2/3 pt-10">
         <div className="flex justify-start items-center gap-2 w-full">
-          <ChartPie
-            className="size-6 text-neutral-500"
-            strokeWidth={"2px"}
-          />
+          <ChartPie className="size-6 text-neutral-500" strokeWidth={"2px"} />
           <h2 className="text-2xl font-semibold text-neutral-500">
             Resent Games
           </h2>

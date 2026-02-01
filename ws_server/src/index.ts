@@ -1,9 +1,10 @@
+import dotenv from "dotenv"
+dotenv.config()
 import { WebSocketServer } from "ws";
 import { GameManager } from "./game-maneger.js";
-import { randomUUID } from "crypto";
 import { ClientMessageSchema } from "./schema/clientMessageSchema.js";
 import type { User } from "./types.js";
-
+import jwt from "jsonwebtoken"
 const wss = new WebSocketServer({ port: 8080 });
 
 const gameManager = new GameManager();
@@ -15,14 +16,32 @@ setInterval(() => {
 wss.on("connection", function connection(ws, req) {
     // TEMP identity (replace with auth later)
     console.log("url", req.url);
-    const userId = new URL(req.url ?? "", "ws://localhost").searchParams.get("userId") ?? randomUUID()
+    const token = new URL(req.url ?? "", "ws://localhost").searchParams.get("token")
+
+    if (!token) {
+        ws.close(1008, "Missing auth token");
+        return;
+    }
+    console.log(process.env.WS_SECRET)
+    let payload;
+
+    try {
+        payload = jwt.verify(token, process.env.WS_SECRET!) as {
+            sub: string;
+        }
+    }catch(error){
+        ws.close(4001, "Invalid or expired token");
+        return;
+    }
+
+
+    console.log(payload.sub)
+
     const user: User = {
-        id: userId,
+        id: payload.sub,
         socket: ws,
         lastSeen: Date.now(),
     }
-    
-    console.log("connected ",userId);
 
     ws.on("message", (data) => {
         let parsed: unknown;
