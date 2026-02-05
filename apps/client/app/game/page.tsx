@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { GameOverOverlay } from "@/feature/game/component/gameover-overlay";
 import { GameTopBar } from "@/feature/game/component/gametopbar";
 import { useGame } from "@/hooks/useGame";
 import { PromotionOption } from "@/schema/clientMessageSchema";
@@ -42,11 +43,11 @@ export default function GamePage() {
   const hasMoves = Array.isArray(state.moves) && state.moves.length > 0;
 
   // update game over ui
-  useEffect(() => {
-    if (state.status === "ENDED" && !showGameOver) {
-      setShowGameOver(true);
-    }
-  }, [state, showGameOver]);
+  // useEffect(() => {
+  //   if (state.status === "ENDED" && !showGameOver) {
+  //     setShowGameOver(true);
+  //   }
+  // }, [state, showGameOver]);
 
   const [gameId, setGameId] = useState<string>("");
 
@@ -63,6 +64,16 @@ export default function GamePage() {
       setIsPromotion(false);
     }
   }, [promoPiece]);
+
+  const isGameOver = state.status === "ENDED";
+
+  const gameResult = !isGameOver
+    ? null
+    : !state.winner
+      ? "DRAW"
+      : state.winner === state.color
+        ? "WIN"
+        : "LOSS";
 
   return (
     <div className="bg-background flex h-screen max-h-screen w-full flex-col">
@@ -131,6 +142,49 @@ export default function GamePage() {
                     </>
                   )}
                 </CardContent>
+
+                {/* Game Over Card */}
+                {/* {state.status === "ENDED" && (
+                  <CardContent className="mt-4 space-y-4">
+                    <div className="flex flex-col items-center gap-2">
+                      <h2
+                        className={`text-4xl font-extrabold ${
+                          isWinner
+                            ? "text-emerald-500"
+                            : isLoser
+                              ? "text-rose-500"
+                              : "text-yellow-500"
+                        }`}
+                      >
+                        {isWinner && "You Win ♟️"}
+                        {isLoser && "You Lost"}
+                        {isDraw && "Draw"}
+                      </h2>
+
+                      <p className="text-muted-foreground text-sm">
+                        {state.winner
+                          ? `Winner: ${state.winner}`
+                          : "No winner this game"}
+                      </p>
+                    </div>
+
+                    <Separator />
+
+                    <div className="flex flex-col gap-2">
+                      <Button onClick={initGame} className="w-full">
+                        Play Again
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => window.location.reload()}
+                      >
+                        Exit Game
+                      </Button>
+                    </div>
+                  </CardContent>
+                )} */}
               </Card>
             </div>
           )}
@@ -141,7 +195,7 @@ export default function GamePage() {
       <PromoBoard isPromotion={isPromotion} setPromoPiece={setPromoPiece} />
 
       {/* GAME OVER */}
-      <Dialog open={showGameOver} onOpenChange={setShowGameOver}>
+      {/* <Dialog open={showGameOver} onOpenChange={setShowGameOver}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Game Over</DialogTitle>
@@ -151,6 +205,7 @@ export default function GamePage() {
           </p>
         </DialogContent>
       </Dialog>
+      */}
 
       {/* WATCH GAME DIALOG */}
       <Dialog open={watchDialog} onOpenChange={setWatchDialog}>
@@ -176,6 +231,12 @@ export default function GamePage() {
           </Button>
         </DialogContent>
       </Dialog>
+      <GameOverOverlay
+        open={isGameOver}
+        result={gameResult!}
+        winner={state.winner}
+        onRestart={initGame}
+      />
     </div>
   );
 }
