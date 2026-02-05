@@ -6,11 +6,13 @@ import { ChartPie, Crown, SquareStack, Star, Table } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DataTable from "@/feature/dashboard/components/data-table";
+import { cn } from "@/lib/utils";
 import PlayButton from "@/feature/dashboard/components/play-button";
 import { columns, data } from "@/feature/dashboard/home/table-info";
-import { cn } from "@/lib/utils";
 
-const page = () => {
+const page = (
+
+) => {
   const items = [
     {
       title: "Rating",
