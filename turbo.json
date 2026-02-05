@@ -20,7 +20,7 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
 
-    "build:ws": {
+    "build:ws_server": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "env": ["DATABASE_URL", "WS_SECRET"],
