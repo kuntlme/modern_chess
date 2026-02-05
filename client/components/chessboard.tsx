@@ -1,15 +1,17 @@
 "use client";
-import { GameState } from "@/lib/types";
-import { PromotionOption } from "@/schema/clientMessageSchema";
-import { Chess } from "chess.js";
 import React, { useEffect, useState } from "react";
 import { Chessboard, ChessboardOptions } from "react-chessboard";
+
+import { Chess } from "chess.js";
+
+import { GameState } from "@/lib/types";
+import { PromotionOption } from "@/schema/clientMessageSchema";
 
 function GameBoard({
   state,
   sendMove,
   currentMove,
-  onPromotionRequired
+  onPromotionRequired,
 }: {
   state: GameState;
   sendMove: (from: string, to: string, promotion: PromotionOption) => void;
@@ -76,13 +78,10 @@ function GameBoard({
   }, [state]);
 
   return (
-  <div className="w-full h-full max-h-[calc(100vh-80px)] max-w-[60vw] aspect-square">
-    <Chessboard
-      options={chessboardOptions}
-    />
-  </div>
-);
-
+    <div className="aspect-square h-full max-h-[calc(100vh-80px)] w-full max-w-[60vw]">
+      <Chessboard options={chessboardOptions} />
+    </div>
+  );
 }
 
 export default GameBoard;

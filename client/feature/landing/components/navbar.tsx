@@ -21,7 +21,7 @@ const navigationLinks = [
 
 export default function Navbar() {
   return (
-    <header className="border border-neutral-500/40 rounded-md px-4 md:px-6">
+    <header className="rounded-md border border-neutral-500/40 px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export default function Navbar() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    className="-translate-y-1.75 origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-315"
+                    className="origin-center -translate-y-1.75 transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-315"
                     d="M4 12L20 12"
                   />
                   <path
@@ -90,7 +90,7 @@ export default function Navbar() {
                   <NavigationMenuItem key={link.label}>
                     <NavigationMenuLink
                       active={link.active}
-                      className="py-1.5 font-medium text-muted-foreground hover:text-primary"
+                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
                       href={link.href}
                     >
                       {link.label}

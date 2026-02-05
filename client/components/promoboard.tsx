@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogClose, DialogContent } from "./ui/dialog";
-import { Button } from "./ui/button";
-import { ChessBishop, ChessKnightIcon, ChessQueenIcon, ChessRookIcon } from "lucide-react";
+
+import {
+  ChessBishop,
+  ChessKnightIcon,
+  ChessQueenIcon,
+  ChessRookIcon,
+} from "lucide-react";
+
 import { PromotionOption } from "@/schema/clientMessageSchema";
+
+import { Button } from "./ui/button";
+import { Dialog, DialogClose, DialogContent } from "./ui/dialog";
 
 const PromoBoard = ({
   isPromotion,
@@ -19,24 +27,24 @@ const PromoBoard = ({
   }, [isPromotion]);
   const handleClick = (piece: PromotionOption) => {
     setPromoPiece(piece);
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+  };
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-        <DialogClose />
-      <DialogContent className="h-3/12 m-0 p-0 border">
-        <div className="flex border justify-center items-center gap-2 h-full">
+      <DialogClose />
+      <DialogContent className="m-0 h-3/12 border p-0">
+        <div className="flex h-full items-center justify-center gap-2 border">
           <Button className="size-30" onClick={() => handleClick("q")}>
-            <ChessQueenIcon className="size-18"/>
+            <ChessQueenIcon className="size-18" />
           </Button>
           <Button className="size-30" onClick={() => handleClick("r")}>
-            <ChessRookIcon className="size-18"/>
+            <ChessRookIcon className="size-18" />
           </Button>
           <Button className="size-30" onClick={() => handleClick("b")}>
-            <ChessBishop className="size-18"/>
+            <ChessBishop className="size-18" />
           </Button>
           <Button className="size-30" onClick={() => handleClick("n")}>
-            <ChessKnightIcon className="size-18"/>
+            <ChessKnightIcon className="size-18" />
           </Button>
         </div>
       </DialogContent>

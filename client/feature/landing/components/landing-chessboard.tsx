@@ -1,7 +1,8 @@
 "use client";
-import { Chess } from "chess.js";
 import React, { useEffect, useState } from "react";
 import { Chessboard, ChessboardOptions } from "react-chessboard";
+
+import { Chess } from "chess.js";
 
 const LandingChessBoard = () => {
   const [currentFen, setCurrentFen] = useState("");
@@ -17,25 +18,25 @@ const LandingChessBoard = () => {
     "g7g6",
     "f1c4",
     "g6h5",
-    "c4f7"
+    "c4f7",
   ];
   useEffect(() => {
     const game = new Chess();
     setCurrentFen(game.fen());
-    
+
     let moveIndex = 0;
-    
+
     const animateMove = () => {
-        game.move(moves[moveIndex]);
-        setCurrentFen(game.fen());
-        moveIndex++;
-        if(moveIndex >= moves.length){
-            moveIndex = 0;
-            game.reset();
-        }
-        setTimeout(animateMove, 700); // 700ms delay between moves
+      game.move(moves[moveIndex]);
+      setCurrentFen(game.fen());
+      moveIndex++;
+      if (moveIndex >= moves.length) {
+        moveIndex = 0;
+        game.reset();
+      }
+      setTimeout(animateMove, 700); // 700ms delay between moves
     };
-    
+
     animateMove();
   }, []);
 

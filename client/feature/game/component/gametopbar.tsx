@@ -1,7 +1,8 @@
+import { Share2 } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Share2 } from "lucide-react";
 
 type Props = {
   white: string;
@@ -12,7 +13,7 @@ type Props = {
 
 export function GameTopBar({ white, black, yourColor, status }: Props) {
   return (
-    <div className="flex items-center justify-between px-6 py-3 border-b">
+    <div className="flex items-center justify-between border-b px-6 py-3">
       {/* PLAYER VS PLAYER */}
       <div className="flex items-center gap-4">
         <Badge variant={yourColor === "w" ? "default" : "secondary"}>

@@ -1,12 +1,14 @@
 "use client";
+import Image from "next/image";
+
+import { ChartPie, Crown, SquareStack, Star, Table } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DataTable from "@/feature/dashboard/components/data-table";
-import { cn } from "@/lib/utils";
-import { ChartPie, Crown, SquareStack, Star, Table } from "lucide-react";
-import Image from "next/image";
-import { data, columns } from "@/feature/dashboard/home/table-info";
 import PlayButton from "@/feature/dashboard/components/play-button";
+import { columns, data } from "@/feature/dashboard/home/table-info";
+import { cn } from "@/lib/utils";
 
 const page = () => {
   const items = [
@@ -27,34 +29,25 @@ const page = () => {
     },
   ];
   return (
-    <div className="w-full flex flex-col justify-center items-center space-y-5">
-      <div
-        className="group w-2/3 h-100 flex items-center justify-between
-                      bg-linear-to-r from-neutral-800 to-neutral-100
-                      rounded-xl shadow-lg hover:shadow-xl
-                      transition-all duration-300 overflow-hidden"
-      >
+    <div className="flex w-full flex-col items-center justify-center space-y-5">
+      <div className="group flex h-100 w-2/3 items-center justify-between overflow-hidden rounded-xl bg-linear-to-r from-neutral-800 to-neutral-100 shadow-lg transition-all duration-300 hover:shadow-xl">
         {/* Image section */}
-        <div className="w-2/3 h-full">
+        <div className="h-full w-2/3">
           <Image
             src="/play_chess.svg"
             alt="Play chess"
             width={140}
             height={140}
-            className="h-full w-fit transition-transform duration-300
-                       group-hover:scale-105"
+            className="h-full w-fit transition-transform duration-300 group-hover:scale-105"
           />
         </div>
 
         {/* Action section */}
-        <div
-          className="w-1/3 h-full flex flex-col justify-center gap-3
-                        backdrop-blur px-3"
-        >
+        <div className="flex h-full w-1/3 flex-col justify-center gap-3 px-3 backdrop-blur">
           <PlayButton />
           <Button
             variant="secondary"
-            className="text-3xl font-semibold py-5 h-30 rounded-2xl text-neutral-500 border border-secondary"
+            className="border-secondary h-30 rounded-2xl border py-5 text-3xl font-semibold text-neutral-500"
           >
             Practice
           </Button>
@@ -62,15 +55,15 @@ const page = () => {
       </div>
 
       {/* stat */}
-      <div className="flex justify-between items-center gap-5 w-2/3">
+      <div className="flex w-2/3 items-center justify-between gap-5">
         {items.map((item, idx) => (
           <div
             className={cn(
-              "w-1/3 border flex justify-start items-center gap-5 p-5 rounded-lg",
-              "shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]",
+              "flex w-1/3 items-center justify-start gap-5 rounded-lg border p-5",
+              "shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
             )}
           >
-            <div className="flex justify-center items-center">{item.icon}</div>
+            <div className="flex items-center justify-center">{item.icon}</div>
             <div>
               <p>{item.title}</p>
               <span className="text-2xl font-extrabold text-neutral-800/60">
@@ -82,7 +75,7 @@ const page = () => {
       </div>
 
       <div className="w-2/3 pt-10">
-        <div className="flex justify-start items-center gap-2 w-full">
+        <div className="flex w-full items-center justify-start gap-2">
           <ChartPie className="size-6 text-neutral-500" strokeWidth={"2px"} />
           <h2 className="text-2xl font-semibold text-neutral-500">
             Resent Games

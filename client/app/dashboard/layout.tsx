@@ -1,7 +1,29 @@
 "use client";
+import React, { useEffect, useState } from "react";
+
+import Link from "next/link";
+
+import {
+  ChessKing,
+  Home,
+  LayoutDashboard,
+  LogOut,
+  Play,
+  Search,
+  Settings,
+  Star,
+  User,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { AnimatePresence, motion } from "motion/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -16,21 +38,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-  ChessKing,
-  Home,
-  LayoutDashboard,
-  LogOut,
-  Play,
-  Search,
-  Settings,
-  Star,
-  User,
-} from "lucide-react";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const items = [
   {
@@ -82,13 +90,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   };
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
-      <div className="flex h-screen w-full bg-sidebar pt-2">
+      <div className="bg-sidebar flex h-screen w-full pt-2">
         <Sidebar
           collapsible="icon"
-          className="border-none bg-sidebar flex flex-col"
+          className="bg-sidebar flex flex-col border-none"
         >
-          <SidebarHeader className="pt-5 shrink-0">
-            <div className="flex gap-2 w-full">
+          <SidebarHeader className="shrink-0 pt-5">
+            <div className="flex w-full gap-2">
               {open ? (
                 <ChessKing className="size-7 shrink-0" />
               ) : (
@@ -97,7 +105,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <motion.div
                 variants={sidebarVarient}
                 animate={open ? "open" : "closed"}
-                className="text-xl font-extrabold flex justify-between items-center w-full"
+                className="flex w-full items-center justify-between text-xl font-extrabold"
               >
                 <span>CheckMate</span>
                 <SidebarTrigger />
@@ -124,60 +132,60 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="px-0 pb-0 shrink-0">
+          <SidebarFooter className="shrink-0 px-0 pb-0">
             <DropdownMenu>
               <DropdownMenuTrigger disabled={!open}>
-              <div
-                className={cn(
-                  "flex items-center rounded-t-2xl shrink-0 transition-all duration-300",
-                  showFooterDetails
-                    ? "gap-2 bg-neutral-200 px-4 py-2 justify-start"
-                    : "pb-2 bg-sidebar justify-center",
-                )}
-              >
-                <Avatar
+                <div
                   className={cn(
-                    "bg-neutral-300 flex justify-center items-center shrink-0 transition-all duration-300 ",
-                    open ? "size-10" : "size-8",
+                    "flex shrink-0 items-center rounded-t-2xl transition-all duration-300",
+                    showFooterDetails
+                      ? "justify-start gap-2 bg-neutral-200 px-4 py-2"
+                      : "bg-sidebar justify-center pb-2"
                   )}
                 >
-                  <User className="text-black size-5" />
-                </Avatar>
-                <AnimatePresence
-                  onExitComplete={() => setShowFooterDetails(false)}
-                >
-                  {open && (
-                    <motion.div
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.3 }}
-                      className="flex items-center gap-3 justify-between"
-                    >
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-md text-neutral-900/70 font-medium">
-                          Player1
-                        </span>
-                        <div className="w-fit flex gap-1 justify-between items-center bg-yellow-500/30 border border-yellow-500 rounded-full px-2 py-0.5">
-                          <Star size={12} className="text-yellow-700" />
-                          <span className="text-xs text-yellow-700">59</span>
+                  <Avatar
+                    className={cn(
+                      "flex shrink-0 items-center justify-center bg-neutral-300 transition-all duration-300",
+                      open ? "size-10" : "size-8"
+                    )}
+                  >
+                    <User className="size-5 text-black" />
+                  </Avatar>
+                  <AnimatePresence
+                    onExitComplete={() => setShowFooterDetails(false)}
+                  >
+                    {open && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex items-center justify-between gap-3"
+                      >
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-md font-medium text-neutral-900/70">
+                            Player1
+                          </span>
+                          <div className="flex w-fit items-center justify-between gap-1 rounded-full border border-yellow-500 bg-yellow-500/30 px-2 py-0.5">
+                            <Star size={12} className="text-yellow-700" />
+                            <span className="text-xs text-yellow-700">59</span>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                  <DropdownMenuItem className="text-red-700 bg-red-400/30 m-0">
-                    <LogOut className="text-red-700"/>
-                    Log Out
-                  </DropdownMenuItem>
+                <DropdownMenuItem className="m-0 bg-red-400/30 text-red-700">
+                  <LogOut className="text-red-700" />
+                  Log Out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarFooter>
         </Sidebar>
-        <div className="rounded-tl-xl bg-background w-full p-5">{children}</div>
+        <div className="bg-background w-full rounded-tl-xl p-5">{children}</div>
       </div>
     </SidebarProvider>
   );

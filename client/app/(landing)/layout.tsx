@@ -1,6 +1,7 @@
+import React from "react";
+
 import Container from "@/feature/landing/components/Container";
 import Navbar from "@/feature/landing/components/navbar";
-import React from "react";
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (

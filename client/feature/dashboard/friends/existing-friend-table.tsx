@@ -1,13 +1,6 @@
 "use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   CircleUserRound,
@@ -16,8 +9,16 @@ import {
   UserRoundPlus,
   UserRoundX,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const existingFriendsData: UserList[] = [
   {
@@ -60,8 +61,8 @@ export const existingFriendsColumns: ColumnDef<UserList>[] = [
     cell: ({ row }) => {
       const user = row.original;
       return (
-        <div className="flex gap-2 justify-start items-center">
-          <Avatar className="bg-neutral-400/40 p-2 rounded-full">
+        <div className="flex items-center justify-start gap-2">
+          <Avatar className="rounded-full bg-neutral-400/40 p-2">
             <AvatarImage src={user.avatar} alt={user.username} />
             <AvatarFallback>
               <User className="size-5" />
@@ -85,23 +86,23 @@ export const existingFriendsColumns: ColumnDef<UserList>[] = [
       switch (status) {
         case "ONLINE": {
           return (
-            <Badge className="bg-green-400/30 border border-green-500 space-x-1 text-green-700">
-              <div className="size-2 rounded-full bg-green-600 animate-pulse" />
+            <Badge className="space-x-1 border border-green-500 bg-green-400/30 text-green-700">
+              <div className="size-2 animate-pulse rounded-full bg-green-600" />
               {status}
             </Badge>
           );
         }
         case "INGAME": {
           return (
-            <Badge className="bg-amber-500/30 border border-amber-500 space-x-1 text-amber-700">
-              <div className="size-2 rounded-full bg-amber-500 animate-pulse" />
+            <Badge className="space-x-1 border border-amber-500 bg-amber-500/30 text-amber-700">
+              <div className="size-2 animate-pulse rounded-full bg-amber-500" />
               {status}
             </Badge>
           );
         }
         case "OFFLINE": {
           return (
-            <Badge className="bg-red-500/30 border border-red-500 text-red-700">
+            <Badge className="border border-red-500 bg-red-500/30 text-red-700">
               {status}
             </Badge>
           );

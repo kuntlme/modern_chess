@@ -10,9 +10,8 @@
     "format": "prettier --write  \"**/*.{ts,tsx,js,jsx,json,md,mdx,css}\"",
     "format:check": "prettier --check  \"**/*.{ts,tsx,js,jsx,json,md,mdx,css}\"",
     "lint-staged": "lint-staged",
-    "prepare": "husky install",
+    "prepare": "husky",
     "check-types": "pnpm run check-types"
-
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

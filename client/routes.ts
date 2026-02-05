@@ -4,9 +4,7 @@
  * @type {string[]}
  */
 
-export const publicRoutes: string[] = [
-   "/login",
-]
+export const publicRoutes: string[] = ["/login"];
 
 /**
  * An Array of routes that are protected
@@ -14,9 +12,7 @@ export const publicRoutes: string[] = [
  * @type {string[]}
  */
 
-export const protectedRoutes: string[] = [
-    "/",
-]
+export const protectedRoutes: string[] = ["/"];
 
 /**
  * An Array of routes that are accessible to the public
@@ -25,9 +21,8 @@ export const protectedRoutes: string[] = [
  */
 
 export const authRoutes: string[] = [
-    "/login",   // Added leading slash
-   
-]
+  "/login", // Added leading slash
+];
 
 /**
  * An Array of routes that are accessible to the public
@@ -35,8 +30,8 @@ export const authRoutes: string[] = [
  * @type {string}
  */
 
-export const apiAuthPrefix: string = "/api/auth"
+export const apiAuthPrefix: string = "/api/auth";
 
 export const DEFAULT_LOGIN_REDIRECT = "/"; // Changed to redirect to home page after login
 
-export const landingPageRoute = "/"
+export const landingPageRoute = "/";

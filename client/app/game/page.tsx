@@ -1,7 +1,14 @@
 "use client";
+import { useEffect, useState } from "react";
+
+import { Share2 } from "lucide-react";
+
 import GameBoard from "@/components/chessboard";
 import MoveBoard from "@/components/moveboard";
+import PromoBoard from "@/components/promoboard";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -9,15 +16,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useGame } from "@/hooks/useGame";
-import { useEffect, useState } from "react";
-import PromoBoard from "@/components/promoboard";
-import { PromotionOption } from "@/schema/clientMessageSchema";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Share2 } from "lucide-react";
 import { GameTopBar } from "@/feature/game/component/gametopbar";
+import { useGame } from "@/hooks/useGame";
+import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export default function GamePage() {
   const { state, move, initGame, watchGame } = useGame();
@@ -63,7 +65,7 @@ export default function GamePage() {
   }, [promoPiece]);
 
   return (
-    <div className="h-screen max-h-screen w-full bg-background flex flex-col">
+    <div className="bg-background flex h-screen max-h-screen w-full flex-col">
       {/* TOP BAR */}
       {state.status !== "IDLE" && (
         <GameTopBar
@@ -75,61 +77,63 @@ export default function GamePage() {
       )}
 
       {/* MAIN CONTENT */}
-      <div className="flex flex-1 gap-6 px-6 justify-center w-full">
-        <div className="flex justify-center w-full">
-        {/* BOARD */}
-        <div className="flex flex-1 items-center justify-center p-2">
-          {state.status === "IDLE" ? (
-            <Card className="w-90 p-6 space-y-4">
-              <Button className="w-full" onClick={initGame}>
-                Start Game
-              </Button>
+      <div className="flex w-full flex-1 justify-center gap-6 px-6">
+        <div className="flex w-full justify-center">
+          {/* BOARD */}
+          <div className="flex flex-1 items-center justify-center p-2">
+            {state.status === "IDLE" ? (
+              <Card className="w-90 space-y-4 p-6">
+                <Button className="w-full" onClick={initGame}>
+                  Start Game
+                </Button>
 
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => setWatchDialog(true)}
-              >
-                Watch Game
-              </Button>
-            </Card>
-          ) : (
-            <Card className="p-0.5 flex justify-center h-full">
-              <CardContent>
-                <GameBoard
-                  state={state}
-                  sendMove={move}
-                  currentMove={currentMove}
-                  onPromotionRequired={(from, to) => {
-                    setPendingMove({ from, to });
-                    setIsPromotion(true);
-                  }}
-                />
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        {/* RIGHT PANEL (ONLY WHEN GAME STARTS) */}
-        {state.status !== "IDLE" && (
-          <div className="flex-1 flex items-center justify-center max-h-full p-2 w-1/3">
-            <Card className="flex flex-col w-80 h-full overflow-y-auto">
-              <CardContent className="flex flex-col gap-4 p-4">
-                {hasMoves && (
-                  <>
-                    <h3 className="font-extrabold text-4xl text-center">Moves</h3>
-                    <Separator className="my-2" />
-                    <MoveBoard
-                      moves={state.moves}
-                      currentMove={currentMove}
-                      setCurrentMove={setCurrentMove}
-                    />
-                  </>
-                )}
-              </CardContent>
-            </Card>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setWatchDialog(true)}
+                >
+                  Watch Game
+                </Button>
+              </Card>
+            ) : (
+              <Card className="flex h-full justify-center p-0.5">
+                <CardContent>
+                  <GameBoard
+                    state={state}
+                    sendMove={move}
+                    currentMove={currentMove}
+                    onPromotionRequired={(from, to) => {
+                      setPendingMove({ from, to });
+                      setIsPromotion(true);
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            )}
           </div>
-        )}
+
+          {/* RIGHT PANEL (ONLY WHEN GAME STARTS) */}
+          {state.status !== "IDLE" && (
+            <div className="flex max-h-full w-1/3 flex-1 items-center justify-center p-2">
+              <Card className="flex h-full w-80 flex-col overflow-y-auto">
+                <CardContent className="flex flex-col gap-4 p-4">
+                  {hasMoves && (
+                    <>
+                      <h3 className="text-center text-4xl font-extrabold">
+                        Moves
+                      </h3>
+                      <Separator className="my-2" />
+                      <MoveBoard
+                        moves={state.moves}
+                        currentMove={currentMove}
+                        setCurrentMove={setCurrentMove}
+                      />
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
 

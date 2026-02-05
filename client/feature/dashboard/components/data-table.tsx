@@ -1,10 +1,20 @@
-"use client"
+"use client";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { ArrowRight, CircleUserRound, Eye, ScanEye } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -13,21 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, CircleUserRound, Eye, ScanEye } from "lucide-react";
 
-
-
-const DataTable = <T,>({data, columns}: {
-    data: T[],
-    columns: ColumnDef<T>[]
+const DataTable = <T,>({
+  data,
+  columns,
+}: {
+  data: T[];
+  columns: ColumnDef<T>[];
 }) => {
   const table = useReactTable({
     data,
@@ -44,7 +46,7 @@ const DataTable = <T,>({data, columns}: {
                 <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext(),
+                    header.getContext()
                   )}
                 </TableHead>
               );
