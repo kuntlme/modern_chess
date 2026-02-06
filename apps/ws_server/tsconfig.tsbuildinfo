@@ -1,1 +1,1 @@
-{"root":["./src/game-maneger.ts","./src/game.ts","./src/index.ts","./src/types.ts","./src/schema/clientMessageSchema.ts","./src/schema/serverMessageSchema.ts"],"version":"5.9.3"}
+{"root":["./src/game-manager.ts","./src/game.ts","./src/index.ts","./src/types.ts","./src/schema/clientMessageSchema.ts","./src/schema/serverMessageSchema.ts"],"version":"5.9.3"}
