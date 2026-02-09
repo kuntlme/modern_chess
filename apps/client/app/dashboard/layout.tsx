@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import {
+  BarChart3,
   ChessKing,
+  Gamepad2,
   Home,
   LayoutDashboard,
   LogOut,
@@ -13,6 +15,7 @@ import {
   Settings,
   Star,
   User,
+  Users,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -52,14 +55,19 @@ const items = [
     icon: <Play />,
   },
   {
+    label: "Games",
+    href: "/dashboard/games",
+    icon: <Gamepad2 />,
+  },
+  {
     label: "Analytics",
     href: "/dashboard/analytics",
-    icon: <Search />,
+    icon: <BarChart3 />,
   },
   {
     label: "Friends",
     href: "/dashboard/friends",
-    icon: <User />,
+    icon: <Users />,
   },
   {
     label: "Settings",
@@ -71,12 +79,18 @@ const items = [
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
   const [showFooterDetails, setShowFooterDetails] = useState(open);
+  const [mounted, setMounted] = useState(false);
+
+  // Fix hydration mismatch - only render client-side components after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (open) setShowFooterDetails(true);
   }, [open]);
 
-  const sidebarVarient = {
+  const sidebarVariant = {
     open: {
       opacity: 1,
       x: 0,
@@ -103,7 +117,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <SidebarTrigger className="size-8" />
               )}
               <motion.div
-                variants={sidebarVarient}
+                variants={sidebarVariant}
                 animate={open ? "open" : "closed"}
                 className="flex w-full items-center justify-between text-xl font-extrabold"
               >
@@ -133,56 +147,66 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </SidebarContent>
 
           <SidebarFooter className="shrink-0 px-0 pb-0">
-            <DropdownMenu>
-              <DropdownMenuTrigger disabled={!open}>
-                <div
-                  className={cn(
-                    "flex shrink-0 items-center rounded-t-2xl transition-all duration-300",
-                    showFooterDetails
-                      ? "justify-start gap-2 bg-neutral-200 px-4 py-2"
-                      : "bg-sidebar justify-center pb-2"
-                  )}
-                >
-                  <Avatar
+            {mounted ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger disabled={!open}>
+                  <div
                     className={cn(
-                      "flex shrink-0 items-center justify-center bg-neutral-300 transition-all duration-300",
-                      open ? "size-10" : "size-8"
+                      "flex shrink-0 items-center rounded-t-2xl transition-all duration-300",
+                      showFooterDetails
+                        ? "justify-start gap-2 bg-neutral-200 px-4 py-2"
+                        : "bg-sidebar justify-center pb-2"
                     )}
                   >
-                    <User className="size-5 text-black" />
-                  </Avatar>
-                  <AnimatePresence
-                    onExitComplete={() => setShowFooterDetails(false)}
-                  >
-                    {open && (
-                      <motion.div
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex items-center justify-between gap-3"
-                      >
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-md font-medium text-neutral-900/70">
-                            Player1
-                          </span>
-                          <div className="flex w-fit items-center justify-between gap-1 rounded-full border border-yellow-500 bg-yellow-500/30 px-2 py-0.5">
-                            <Star size={12} className="text-yellow-700" />
-                            <span className="text-xs text-yellow-700">59</span>
+                    <Avatar
+                      className={cn(
+                        "flex shrink-0 items-center justify-center bg-neutral-300 transition-all duration-300",
+                        open ? "size-10" : "size-8"
+                      )}
+                    >
+                      <User className="size-5 text-black" />
+                    </Avatar>
+                    <AnimatePresence
+                      onExitComplete={() => setShowFooterDetails(false)}
+                    >
+                      {open && (
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ duration: 0.3 }}
+                          className="flex items-center justify-between gap-3"
+                        >
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-md font-medium text-neutral-900/70">
+                              Player1
+                            </span>
+                            <div className="flex w-fit items-center justify-between gap-1 rounded-full border border-yellow-500 bg-yellow-500/30 px-2 py-0.5">
+                              <Star size={12} className="text-yellow-700" />
+                              <span className="text-xs text-yellow-700">
+                                59
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem className="m-0 bg-red-400/30 text-red-700">
-                  <LogOut className="text-red-700" />
-                  Log Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem className="m-0 bg-red-400/30 text-red-700">
+                    <LogOut className="text-red-700" />
+                    Log Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex shrink-0 items-center justify-center pb-2">
+                <Avatar className="flex size-8 shrink-0 items-center justify-center bg-neutral-300">
+                  <User className="size-5 text-black" />
+                </Avatar>
+              </div>
+            )}
           </SidebarFooter>
         </Sidebar>
         <div className="bg-background w-full rounded-tl-xl p-5">{children}</div>
