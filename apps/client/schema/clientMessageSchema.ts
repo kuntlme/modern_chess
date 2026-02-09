@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const WatchGameShema = z.object({
+export const WatchGameSchema = z.object({
   type: z.literal("WATCH_GAME"),
   payload: z.object({
     gameId: z.uuid(),
@@ -20,7 +20,7 @@ export const MoveSchema = z.object({
   payload: z.object({
     from: square,
     to: square,
-    promotion: PromotionOptionSchema,
+    promotion: z.enum(["q", "r", "b", "n", ""]),
   }),
 });
 
@@ -31,11 +31,21 @@ export const ExitSchema = z.object({
   }),
 });
 
+export const GetOnlineUsersSchema = z.object({
+  type: z.literal("GET_ONLINE_USERS"),
+});
+
+export const PingSchema = z.object({
+  type: z.literal("PING"),
+});
+
 export const ClientMessageSchema = z.discriminatedUnion("type", [
-  WatchGameShema,
+  WatchGameSchema,
   InitGameSchema,
   MoveSchema,
   ExitSchema,
+  GetOnlineUsersSchema,
+  PingSchema,
 ]);
 
 export type PromotionOption = z.infer<typeof PromotionOptionSchema>;
