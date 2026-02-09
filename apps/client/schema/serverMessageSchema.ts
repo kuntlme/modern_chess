@@ -98,7 +98,6 @@ export const ServerMessageSchema = z.discriminatedUnion("type", [
   ResumeGameSchema,
   GameOverSchema,
   ErrorSchema,
-  OnlineUserSchema,
   UserJoinedSchema,
   OnlineUsersSchema,
   UserLeftSchema,
