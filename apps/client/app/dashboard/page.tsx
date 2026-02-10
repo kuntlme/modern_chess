@@ -14,8 +14,10 @@ import {
 import { motion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DataTable from "@/feature/dashboard/components/data-table";
+import OnlineUserCard from "@/feature/dashboard/components/online-user-card";
 import PlayButton from "@/feature/dashboard/components/play-button";
 import { columns, data } from "@/feature/dashboard/home/table-info";
 import { usePresence } from "@/hooks/usePresence";
@@ -106,59 +108,88 @@ const page = () => {
         </div>
       </motion.div>
 
-      <div className="group flex h-100 w-2/3 items-center justify-between overflow-hidden rounded-xl bg-linear-to-r from-neutral-800 to-neutral-100 shadow-lg transition-all duration-300 hover:shadow-xl">
-        {/* Image section */}
-        <div className="h-full w-2/3">
-          <Image
-            src="/play_chess.svg"
-            alt="Play chess"
-            width={140}
-            height={140}
-            className="h-full w-fit transition-transform duration-300 group-hover:scale-105"
-          />
-        </div>
+      {/* Stats & Online User Row */}
+      <div className="flex w-full max-w-5xl gap-6">
+        {/* Stats Card */}
+        <div className="flex flex-1 gap-4">
+          {items.map((item, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 * idx }}
+              className="flex-1"
+            >
+              <Card
+                className={cn(
+                  "absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:scale-110"
+                )}
+              >
+                {/* Glow effect on hover */}
+                <div
+                  className={cn(
+                    "absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-10",
+                    item.gradient
+                  )}
+                />
 
-        {/* Action section */}
-        <div className="flex h-full w-1/3 flex-col justify-center gap-3 px-3 backdrop-blur">
-          <PlayButton />
-          <Button
-            variant="secondary"
-            className="border-secondary h-30 rounded-2xl border py-5 text-3xl font-semibold text-neutral-500"
-          >
-            Practice
-          </Button>
+                <CardContent className="relative flex items-center gap-4 p-5">
+                  <div
+                    className={cn(
+                      "rounded-xl bg-linear-to-br p-3 shadow-lg transition-transform duration-300 group-hover:scale-110",
+                      item.gradient
+                    )}
+                  >
+                    <div className="text-white">{item.icon}</div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-400">
+                      {item.title}
+                    </p>
+                    <p className="text-2xl font-bold text-white">
+                      {item.amount}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* stat */}
-      <div className="flex w-2/3 items-center justify-between gap-5">
-        {items.map((item, idx) => (
-          <div
-            className={cn(
-              "flex w-1/3 items-center justify-start gap-5 rounded-lg border p-5",
-              "shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
-            )}
-          >
-            <div className="flex items-center justify-center">{item.icon}</div>
-            <div>
-              <p>{item.title}</p>
-              <span className="text-2xl font-extrabold text-neutral-800/60">
-                {item.amount}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Main Content Row */}
+      <div className="flex w-full max-w-5xl gap-6">
+        {/* Recent Games Table */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex-1"
+        >
+          <Card className="border-0 bg-linear-to-br from-slate-800 to-slate-900 shadow-xl">
+            <CardContent className="p-6">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 p-2.5 shadow-lg shadow-blue-500/20">
+                  <ChartPie className="size-5 text-white" />
+                </div>
+                <h2 className="text-lg font-semibold text-white">
+                  Recent Games
+                </h2>
+              </div>
+              <DataTable data={data} columns={columns} />
+            </CardContent>
+          </Card>
+        </motion.div>
 
-      <div className="w-2/3 pt-10">
-        <div className="flex w-full items-center justify-start gap-2">
-          <ChartPie className="size-6 text-neutral-500" strokeWidth={"2px"} />
-          <h2 className="text-2xl font-semibold text-neutral-500">
-            Resent Games
-          </h2>
-        </div>
-        {/* Table  */}
-        <DataTable data={data} columns={columns} />
+        {/* Online Users Panel */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="w-80"
+        >
+          <OnlineUserCard users={onlineUsers} connected={connected} />
+        </motion.div>
       </div>
     </div>
   );

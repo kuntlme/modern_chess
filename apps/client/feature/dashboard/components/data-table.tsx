@@ -37,7 +37,7 @@ const DataTable = <T,>({
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <Table>
+    <Table className="text-white">
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
