@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Circle, Clock, Gamepad2, User, Users } from "lucide-react";
 import { AnimatePresence } from "motion/react";
@@ -34,8 +34,15 @@ const statusConfig = {
 };
 
 const OnlineUserCard = ({ users, connected }: OnlineUserCardProps) => {
-  const onlineCount = users.filter((u) => u.status === "online").length;
-  const inGameCount = users.filter((u) => u.status === "in_game").length;
+  const [onlineCount, setOnlineCount] = useState<number>(0);
+  const [inGameCount, setInGameCount] = useState<number>(0);
+
+  useEffect(() => {
+    setOnlineCount(() => users.filter((u) => u.status === "online").length);
+    setInGameCount(() => users.filter((u) => u.status === "in_game").length);
+    console.log("enter");
+    console.log(users);
+  }, [users, connected]);
   return (
     <Card className="overflow-hidden border-0 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 shadow-2xl">
       <CardHeader className="border-b border-slate-700/50 pb-4">
