@@ -49,13 +49,11 @@ export function usePresence() {
 
       switch (message.type) {
         case "ONLINE_USERS":
-          console.log("users", message.payload.users);
           setOnlineUsers(message.payload.users);
           break;
         case "USER_JOINED":
           setOnlineUsers((prev) => {
             // Don't add if already exists
-            console.log("user joined");
             if (prev.some((u) => u.id === message.payload.id)) {
               return prev.map((u) =>
                 u.id === message.payload.id ? message.payload : u
@@ -187,7 +185,6 @@ export function usePresence() {
   // Request online users refresh
   const refreshOnlineUsers = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
-      console.log("enter get online users");
       wsRef.current.send(JSON.stringify({ type: "GET_ONLINE_USERS" }));
     }
   }, []);

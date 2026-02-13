@@ -40,8 +40,6 @@ const OnlineUserCard = ({ users, connected }: OnlineUserCardProps) => {
   useEffect(() => {
     setOnlineCount(() => users.filter((u) => u.status === "online").length);
     setInGameCount(() => users.filter((u) => u.status === "in_game").length);
-    console.log("enter");
-    console.log(users);
   }, [users, connected]);
   return (
     <Card className="overflow-hidden border-0 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 shadow-2xl">
