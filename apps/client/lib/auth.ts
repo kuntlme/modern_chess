@@ -27,10 +27,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (!existingUser) return token;
 
-      const exisitingAccount = await getAccountByUserId(existingUser.id);
+      const existingAccount = await getAccountByUserId(existingUser.id);
 
       token.name = existingUser.name;
       token.email = existingUser.email;
+      token.profileComplete = existingUser.profileComplete;
+      if (existingUser.username) {
+        token.username = existingUser.username;
+      }
       return token;
     },
 
@@ -38,6 +42,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // Attach the user ID from the token to the session
       if (token.sub && session.user) {
         session.user.id = token.sub;
+        session.user.profileComplete = token.profileComplete as boolean;
       }
 
       return session;

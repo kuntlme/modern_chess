@@ -38,15 +38,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  gamesAsWhite         Game[] @relation("WhitePlayer")
-  gamesAsBlack         Game[] @relation("BlackPlayer")
+  id              String    @id @default(cuid())
+  name            String?
+  username        String?   @unique
+  email           String?   @unique
+  emailVerified   DateTime? @map("email_verified")
+  image           String?
+  country         String?
+  accounts        Account[]
+  sessions        Session[]
+  gamesAsWhite    Game[]    @relation("WhitePlayer")
+  gamesAsBlack    Game[]    @relation("BlackPlayer")
+  profileComplete Boolean   @default(false)
+  rating          Int       @default(800)
 
   @@map("users")
 }

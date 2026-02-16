@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 import {
@@ -194,7 +195,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem className="m-0 bg-red-400/30 text-red-700">
+                  <DropdownMenuItem
+                    className="m-0 bg-red-400/30 text-red-700"
+                    onClick={async () => {
+                      await signOut();
+                    }}
+                  >
                     <LogOut className="text-red-700" />
                     Log Out
                   </DropdownMenuItem>
