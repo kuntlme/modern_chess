@@ -117,7 +117,7 @@ export class Game {
       reason = "CHECKMATE";
       winner = this.chess.turn() === "w" ? "b" : "w";
     }
-    // TODO: add condition from Resingation & Timeout, winner: "w" or "b", "Abandaned" winner: null
+    // TODO: add condition from Resignation & Timeout, winner: "w" or "b", "Abandaned" winner: null
     else if (this.chess.isStalemate()) {
       reason = "STALEMATE";
     } else if (this.chess.isThreefoldRepetition()) {
