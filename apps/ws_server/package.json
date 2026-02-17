@@ -14,10 +14,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@repo/prisma": "workspace:*",
     "@types/ws": "^8.18.1",
     "chess.js": "^1.4.0",
     "crypto": "^1.0.1",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "jsonwebtoken": "^9.0.3",
     "typescript": "^5.9.3",
     "ws": "^8.19.0",
