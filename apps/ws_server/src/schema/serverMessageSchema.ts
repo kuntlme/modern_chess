@@ -87,6 +87,16 @@ export const UserLeftSchema = z.object({
   }),
 });
 
+export const UserInGameSchema = z.object({
+  type: z.literal("USER_IN_GAME"),
+  payload: OnlineUserSchema,
+});
+
+export const UserOutGameSchema = z.object({
+  type: z.literal("USER_OUT_GAME"),
+  payload: OnlineUserSchema,
+});
+
 export const PongSchema = z.object({
   type: z.literal("PONG"),
 });
@@ -101,6 +111,8 @@ export const ServerMessageSchema = z.discriminatedUnion("type", [
   UserJoinedSchema,
   OnlineUsersSchema,
   UserLeftSchema,
+  UserInGameSchema,
+  UserOutGameSchema,
   PongSchema,
 ]);
 

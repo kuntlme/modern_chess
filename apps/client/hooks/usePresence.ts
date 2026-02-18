@@ -67,6 +67,28 @@ export function usePresence() {
             prev.filter((u) => u.id !== message.payload.id)
           );
           break;
+        case "USER_IN_GAME":
+          setOnlineUsers((prev) => {
+            //Don't update if it already updated
+            if (prev.some((u) => u.id === message.payload.id)) {
+              return prev.map((u) =>
+                u.id === message.payload.id ? message.payload : u
+              );
+            }
+            return [...prev, message.payload];
+          });
+          break;
+        case "USER_OUT_GAME":
+          setOnlineUsers((prev) => {
+            //Don't update if it already updated
+            if (prev.some((u) => u.id === message.payload.id)) {
+              return prev.map((u) =>
+                u.id === message.payload.id ? message.payload : u
+              );
+            }
+            return [...prev, message.payload];
+          });
+          break;
         case "PONG":
           // Connection is alive
           break;

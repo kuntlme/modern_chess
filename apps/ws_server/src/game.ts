@@ -23,7 +23,12 @@ export class Game {
 
   watchers = new Map<string, User>();
 
-  constructor(id: string, white: User, black: User) {
+  constructor(
+    id: string,
+    white: User,
+    black: User,
+    private onGameOver: (gameId: string) => void
+  ) {
     this.id = id;
     this.white = white;
     this.black = black;
@@ -150,6 +155,8 @@ export class Game {
       gameResult: reason,
       pgn: this.chess.pgn(),
     });
+
+    this.onGameOver(this.id);
   }
 
   resume(user: User) {

@@ -84,6 +84,36 @@ export class GameManager {
     }
   }
 
+  // Broadcast user in_game to all connected users
+  private broadcastUserInGame(inGameUser: User) {
+    for (const [id, user] of this.users) {
+      if (user.socket && user.id !== inGameUser.id) {
+        this.send(user, {
+          type: "USER_IN_GAME",
+          payload: {
+            id: inGameUser.id,
+            status: inGameUser.status,
+          },
+        });
+      }
+    }
+  }
+
+  // Broadcast user out_game to all connected users
+  private broadcastUserOutGame(outGameUser: User) {
+    for (const [id, user] of this.users) {
+      if (user.socket && user.id !== outGameUser.id) {
+        this.send(user, {
+          type: "USER_OUT_GAME",
+          payload: {
+            id: outGameUser.id,
+            status: outGameUser.status,
+          },
+        });
+      }
+    }
+  }
+
   // Broadcast user left to all connected users
   private broadcastUserLeft(leftUserId: string) {
     for (const [id, user] of this.users) {
@@ -124,13 +154,22 @@ export class GameManager {
       // Try to match with waiting user
       if (this.waitingUser && this.waitingUser.id !== existing.id) {
         const gameId = randomUUID();
-        const game = new Game(gameId, this.waitingUser, existing);
+        const game = new Game(
+          gameId,
+          this.waitingUser,
+          existing,
+          this.handleGameOver.bind(this)
+        );
         console.log("gameID", gameId);
         this.games.set(gameId, game);
 
         // Update both users status to in_game
         this.waitingUser.status = "in_game";
         existing.status = "in_game";
+
+        // Broadcast to online user they these two user is in_game
+        this.broadcastUserInGame(this.waitingUser);
+        this.broadcastUserInGame(existing);
 
         this.waitingUser = null;
       } else {
@@ -145,13 +184,23 @@ export class GameManager {
     if (this.waitingUser) {
       // INIT_GAME
       const gameId = randomUUID();
-      const game = new Game(gameId, this.waitingUser, user);
+      const game = new Game(
+        gameId,
+        this.waitingUser,
+        user,
+        this.handleGameOver.bind(this)
+      );
       console.log("gameID ", gameId);
       this.games.set(gameId, game);
 
       // Update both users status to in_game
       this.waitingUser.status = "in_game";
       user.status = "in_game";
+
+      // Broadcast online users that they are in game
+      this.broadcastUserInGame(this.waitingUser);
+      this.broadcastUserInGame(user);
+
       this.waitingUser = null;
     } else {
       this.waitingUser = user;
@@ -228,5 +277,23 @@ export class GameManager {
     if (!user.socket) return;
 
     user.socket.send(JSON.stringify(message));
+  }
+
+  private handleGameOver(gameId: string) {
+    const game = this.games.get(gameId);
+    if (!game) return;
+
+    // Reset players
+    const players = [game.white, game.black];
+
+    for (const player of players) {
+      player.gameId = undefined;
+      player.status = player.socket ? "online" : "idle";
+
+      // Broadcast online users that user out of the game
+      this.broadcastUserOutGame(player);
+    }
+
+    this.games.delete(gameId);
   }
 }
