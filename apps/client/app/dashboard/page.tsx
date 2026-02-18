@@ -1,191 +1,145 @@
 "use client";
+
 import Image from "next/image";
 
-import {
-  ChartPie,
-  Crown,
-  SquareStack,
-  Star,
-  Table,
-  Target,
-  Trophy,
-  Zap,
-} from "lucide-react";
+import { ChartPie, Star, Target, Trophy, Zap } from "lucide-react";
 import { motion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DataTable from "@/feature/dashboard/components/data-table";
 import OnlineUserCard from "@/feature/dashboard/components/online-user-card";
 import PlayButton from "@/feature/dashboard/components/play-button";
 import { columns, data } from "@/feature/dashboard/home/table-info";
 import { usePresence } from "@/hooks/usePresence";
-import { cn } from "@/lib/utils";
 
-const page = () => {
+const Page = () => {
   const { onlineUsers, connected } = usePresence();
 
   const items = [
     {
       title: "Rating",
       amount: 1580,
-      icon: <Star className="size-8" />,
-      gradient: "from-amber-500 to-orange-600",
-      bgGlow: "shadow-amber-500/20",
+      icon: <Star className="size-6" />,
     },
     {
-      title: "Game Played",
+      title: "Games Played",
       amount: 453,
-      icon: <Trophy className="size-8" />,
-      gradient: "from-emerald-500 to-teal-600",
-      bgGlow: "shadow-emerald-500/20",
+      icon: <Trophy className="size-6" />,
     },
     {
       title: "Win Rate",
       amount: "34%",
-      icon: <Target className="size-8" />,
-      gradient: "from-violet-500 to-purple-600",
-      bgGlow: "shadow-violet-500/20",
+      icon: <Target className="size-6" />,
     },
   ];
+
   return (
-    <div className="flex w-full flex-col items-center justify-start gap-8 py-4">
-      {/* Hero Section - Play Card */}
+    <div className="flex w-full flex-col items-center gap-10 py-10">
+      {/* HERO SECTION */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-5xl text-black"
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-5xl"
       >
-        <div className="group relative overflow-hidden rounded-3xl bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 shadow-2xl">
-          {/* Animated background gradient */}
-          <div className="absolute inset-0 bg-linear-to-r from-amber-500/10 via-transparent to-emerald-500/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          {/* Glow effect */}
-          <div className="absolute -top-20 -right-20 size-72 rounded-full bg-amber-500/20 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/20 blur-3xl" />
-          <div className="relative flex min-h-70 items-center justify-between p-8">
-            {/* Left side - Chess illustration */}
-            <div className="relative flex-1">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-              >
-                <Image
-                  src="/play_chess.svg"
-                  alt="Play chess"
-                  width={350}
-                  height={350}
-                  className="drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
-                />
-              </motion.div>
+        <Card className="bg-card shadow-lg">
+          <CardContent className="flex min-h-[280px] items-center justify-between p-10">
+            {/* Left Illustration */}
+            <div className="flex-1">
+              <Image
+                src="/play_chess.svg"
+                alt="Play chess"
+                width={320}
+                height={320}
+                className="opacity-90"
+              />
             </div>
 
-            {/* Right side - Actions */}
-            <div className="flex flex-col items-end gap-5">
-              <div className="mb-4 text-right">
-                <h2 className="mb-2 text-4xl font-bold text-white">
+            {/* Right Content */}
+            <div className="flex flex-col items-end gap-6 text-right">
+              <div>
+                <h2 className="text-foreground font-serif text-4xl font-semibold">
                   Ready to Play?
                 </h2>
-                <p className="text-lg text-slate-400">
-                  Challenge players worldwide
+                <p className="text-muted-foreground mt-2">
+                  Challenge players worldwide and improve your strategy.
                 </p>
               </div>
 
               <div className="flex flex-col gap-3">
                 <PlayButton />
+
                 <Button
-                  variant="outline"
-                  className="h-14 min-w-50 rounded-2xl border-2 border-slate-600 bg-transparent text-lg font-semibold text-slate-300 transition-all hover:border-slate-500 hover:bg-slate-800 hover:text-white"
+                  variant="secondary"
+                  className="h-14 rounded-xl px-8 text-base font-medium"
                 >
-                  <Zap className="mr-2 size-5" />
+                  <Zap className="mr-2 size-4" />
                   Practice
                 </Button>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </motion.div>
 
-      {/* Stats & Online User Row */}
+      {/* STATS SECTION */}
       <div className="flex w-full max-w-5xl gap-6">
-        {/* Stats Card */}
-        <div className="flex flex-1 gap-4">
-          {items.map((item, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 * idx }}
-              className="flex-1"
-            >
-              <Card
-                className={cn(
-                  "absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:scale-110"
-                )}
-              >
-                {/* Glow effect on hover */}
-                <div
-                  className={cn(
-                    "absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-10",
-                    item.gradient
-                  )}
-                />
-
-                <CardContent className="relative flex items-center gap-4 p-5">
-                  <div
-                    className={cn(
-                      "rounded-xl bg-linear-to-br p-3 shadow-lg transition-transform duration-300 group-hover:scale-110",
-                      item.gradient
-                    )}
-                  >
-                    <div className="text-white">{item.icon}</div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-400">
-                      {item.title}
-                    </p>
-                    <p className="text-2xl font-bold text-white">
-                      {item.amount}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        {items.map((item, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1 }}
+            className="flex-1"
+          >
+            <Card className="bg-card shadow-md">
+              <CardContent className="flex items-center gap-4 p-6">
+                <div className="bg-primary/10 text-primary rounded-lg p-3">
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-muted-foreground text-sm">{item.title}</p>
+                  <p className="text-foreground text-2xl font-semibold">
+                    {item.amount}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Main Content Row */}
+      {/* MAIN CONTENT */}
       <div className="flex w-full max-w-5xl gap-6">
-        {/* Recent Games Table */}
+        {/* Recent Games */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ delay: 0.2 }}
           className="flex-1"
         >
-          <Card className="border-0 bg-linear-to-br from-slate-800 to-slate-900 shadow-xl">
+          <Card className="bg-card shadow-md">
             <CardContent className="p-6">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 p-2.5 shadow-lg shadow-blue-500/20">
-                  <ChartPie className="size-5 text-white" />
+              <div className="mb-6 flex items-center gap-3">
+                <div className="bg-primary/10 text-primary rounded-md p-2">
+                  <ChartPie className="size-4" />
                 </div>
-                <h2 className="text-lg font-semibold text-white">
+                <h2 className="font-serif text-lg font-semibold">
                   Recent Games
                 </h2>
               </div>
+
               <DataTable data={data} columns={columns} />
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Online Users Panel */}
+        {/* Online Users */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 15 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ delay: 0.3 }}
           className="w-80"
         >
           <OnlineUserCard users={onlineUsers} connected={connected} />
@@ -195,4 +149,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
