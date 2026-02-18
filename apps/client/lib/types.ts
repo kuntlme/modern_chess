@@ -6,3 +6,8 @@ export type GameState = {
   yourTurn: boolean;
   winner?: "w" | "b" | null;
 };
+
+export type GetGameFromDB = {
+  type: "DB_GAME_LOADED";
+  payload: GameState;
+};

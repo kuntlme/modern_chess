@@ -72,7 +72,9 @@ export class Game {
     if ((turn === "w" && !isWhite) || (turn === "b" && isWhite)) {
       return this.send(user, {
         type: "ERROR",
-        message: "Not your turn",
+        payload: {
+          message: "Not your turn",
+        },
       });
     }
     let result;
@@ -81,7 +83,9 @@ export class Game {
     } catch (error) {
       return this.send(user, {
         type: "ERROR",
-        message: "Invalid move",
+        payload: {
+          message: "Invalid move",
+        },
       });
     }
 

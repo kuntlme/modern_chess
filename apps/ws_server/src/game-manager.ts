@@ -226,7 +226,9 @@ export class GameManager {
         if (!user.gameId) {
           this.send(user, {
             type: "ERROR",
-            message: "You are not in game",
+            payload: {
+              message: "You are not in game",
+            },
           });
           return;
         }
@@ -244,7 +246,11 @@ export class GameManager {
         if (!game) {
           this.send(user, {
             type: "ERROR",
-            message: "Invalid game ID",
+            payload: {
+              type: "WATCH_GAME",
+              message: "Invalid game ID",
+              gameId: message.payload.gameId,
+            },
           });
           return;
         }

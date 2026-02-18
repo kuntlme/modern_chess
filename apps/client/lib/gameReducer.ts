@@ -1,10 +1,10 @@
 import { ServerMessage } from "@/schema/serverMessageSchema";
 
-import { GameState } from "./types";
+import { GameState, GetGameFromDB } from "./types";
 
 export function gameReducer(
   state: GameState,
-  message: ServerMessage
+  message: ServerMessage | GetGameFromDB
 ): GameState {
   switch (message.type) {
     case "WATCH_GAME": {
@@ -14,6 +14,16 @@ export function gameReducer(
         moves: message.payload.moves,
         status: "PLAYING",
       };
+    }
+    case "DB_GAME_LOADED": {
+      return {
+        ...state,
+        status: "ENDED",
+        fen: message.payload.fen,
+        moves: message.payload.moves,
+        winner: message.payload.winner,
+      };
+      break;
     }
     case "INIT_GAME":
       return {
@@ -47,7 +57,7 @@ export function gameReducer(
         yourTurn: false,
       };
     case "ERROR": {
-      console.error(message.message);
+      console.error(message.payload.message);
       return state;
     }
     default:

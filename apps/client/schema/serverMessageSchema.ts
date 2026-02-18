@@ -58,9 +58,24 @@ export const GameOverSchema = z.object({
   }),
 });
 
+const WatchGameErrorPayloadSchema = z.object({
+  type: z.string(),
+  message: z.string(),
+  gameId: z.string(),
+});
+
+const OtherError = z.object({
+  message: z.string(),
+});
+
+const ErrorPayloadSchema = z.discriminatedUnion("type", [
+  WatchGameErrorPayloadSchema,
+  OtherError,
+]);
+
 export const ErrorSchema = z.object({
   type: z.literal("ERROR"),
-  message: z.string(),
+  payload: ErrorPayloadSchema,
 });
 
 export const OnlineUserSchema = z.object({

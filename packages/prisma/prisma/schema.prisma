@@ -69,7 +69,7 @@ model Game {
   blackId    String
   status     GameStatus  @default(ONGOING)
   winner     GameWinner?
-  fen        String?
+  fen        String
   startedAt  DateTime    @default(now())
   endedAt    DateTime?
   gameResult String?

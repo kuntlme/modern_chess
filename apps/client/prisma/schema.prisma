@@ -76,7 +76,7 @@ model Game {
   status GameStatus  @default(ONGOING)
   winner GameWinner?
 
-  fen       String? // snapshot cache ONLY
+  fen       String // snapshot cache ONLY
   startedAt DateTime  @default(now())
   endedAt   DateTime?
 

@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useReducer, useRef } from "react";
 
+import { asyncWrapProviders } from "async_hooks";
 import { Chess, Move, Square } from "chess.js";
 
+import { getGameFromDB } from "@/feature/game/action/game-from-db";
 import { gameReducer } from "@/lib/gameReducer";
 import { PromotionOption } from "@/schema/clientMessageSchema";
 import { ServerMessage } from "@/schema/serverMessageSchema";
@@ -37,9 +39,37 @@ export function useGame() {
   useEffect(() => {
     if (!connected) return;
 
-    onMessage((event: MessageEvent) => {
+    onMessage(async (event: MessageEvent) => {
       try {
         const message: ServerMessage = JSON.parse(event.data);
+        if (
+          message.type === "ERROR" &&
+          "type" in message.payload &&
+          message.payload.type === "WATCH_GAME" &&
+          message.payload.gameId
+        ) {
+          // Fallback to DB
+          const game = await getGameFromDB(message.payload.gameId);
+
+          if (game) {
+            dispatch({
+              type: "DB_GAME_LOADED",
+              payload: {
+                fen: game.fen,
+                moves: game.moves,
+                winner:
+                  game.winner === "BLACK"
+                    ? "b"
+                    : game.winner === "WHITE"
+                      ? "w"
+                      : null,
+                status: "ENDED",
+                yourTurn: false,
+              },
+            });
+          }
+          return;
+        }
         dispatch(message);
       } catch (error) {
         console.error("Failed to parse server message:", error);
