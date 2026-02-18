@@ -30,6 +30,7 @@ export class GameManager {
 
       //Broadcast that they're back online
       this.broadcastUserJoined(existing);
+      return;
     }
     // New user
     this.users.set(user.id, user);
