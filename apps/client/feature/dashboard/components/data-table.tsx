@@ -37,10 +37,13 @@ const DataTable = <T,>({
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <Table className="text-white">
+    <Table className="text-foreground">
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
+          <TableRow
+            key={headerGroup.id}
+            className="hover: bg-muted/50 transition-colors"
+          >
             {headerGroup.headers.map((header) => {
               return (
                 <TableHead key={header.id}>
@@ -57,7 +60,10 @@ const DataTable = <T,>({
       <TableBody>
         {table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow
+              key={row.id}
+              className="hover: bg-muted/50 transition-colors"
+            >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -66,7 +72,7 @@ const DataTable = <T,>({
             </TableRow>
           ))
         ) : (
-          <TableRow>
+          <TableRow className="hover: bg-muted/50 transition-colors">
             <TableCell colSpan={columns.length} className="h-24 text-center">
               No Result
             </TableCell>

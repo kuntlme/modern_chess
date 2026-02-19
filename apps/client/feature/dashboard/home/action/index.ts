@@ -52,7 +52,7 @@ export async function getDashboardData() {
 
     // Format data according to the table
     const mappedGames = recentGames.map((game) => {
-      const isWhite = game.whiteId;
+      const isWhite = game.whiteId === userId;
       const color: "white" | "black" = isWhite ? "white" : "black";
 
       const opponent: string = isWhite
@@ -78,11 +78,12 @@ export async function getDashboardData() {
         result,
         color,
         date: formatDistanceToNow(game.startedAt, { addSuffix: true }),
+        ratingChange: 5,
       };
     });
 
     const winRate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
-
+    console.log(recentGames);
     return {
       rating: user.rating,
       totalGames,

@@ -10,16 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import DataTable from "@/feature/dashboard/components/data-table";
 import OnlineUserCard from "@/feature/dashboard/components/online-user-card";
 import PlayButton from "@/feature/dashboard/components/play-button";
-import { columns } from "@/feature/dashboard/home/table-info";
+import { columns, GameList } from "@/feature/dashboard/home/table-info";
 import { usePresence } from "@/hooks/usePresence";
-
-interface GameList {
-  id: string;
-  opponent: string;
-  result: "win" | "lose" | "draw";
-  color: "white" | "black";
-  date: string;
-}
 
 interface DashboardData {
   rating: number;
