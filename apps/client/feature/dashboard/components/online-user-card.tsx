@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePresence } from "@/hooks/usePresence";
 import { cn } from "@/lib/utils";
 import { OnlineUser } from "@/schema/serverMessageSchema";
 
@@ -34,7 +35,8 @@ const statusConfig = {
   },
 };
 
-const OnlineUserCard = ({ users, connected }: OnlineUserCardProps) => {
+const OnlineUserCard = () => {
+  const { onlineUsers: users, connected } = usePresence();
   const [onlineCount, setOnlineCount] = useState(0);
   const [inGameCount, setInGameCount] = useState(0);
 
