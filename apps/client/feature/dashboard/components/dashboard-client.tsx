@@ -13,7 +13,7 @@ import PlayButton from "@/feature/dashboard/components/play-button";
 import { columns, GameList } from "@/feature/dashboard/home/table-info";
 import { usePresence } from "@/hooks/usePresence";
 
-interface DashboardData {
+export interface DashboardData {
   rating: number;
   totalGames: number;
   winRate: number;

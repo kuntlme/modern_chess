@@ -51,6 +51,14 @@ model User {
   accounts        Account[]
   sessions        Session[]
 
+    // Appearance
+  theme String @default("light")
+  language String @default("en")
+
+  // Game 
+  autoQueen Boolean @default(false)
+  showLegalMoves Boolean @default(false)
+
   @@map("users")
 }
 
