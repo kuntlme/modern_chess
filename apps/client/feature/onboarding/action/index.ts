@@ -28,7 +28,7 @@ export async function completeOnboarding(formData: OnboardingInput) {
     return { error: "Invalid input" };
   }
 
-  const { username, country } = formData;
+  const { username, country, bio = "" } = formData;
 
   try {
     await prisma.user.update({
@@ -36,6 +36,7 @@ export async function completeOnboarding(formData: OnboardingInput) {
       data: {
         username,
         country,
+        bio,
         profileComplete: true,
       },
     });

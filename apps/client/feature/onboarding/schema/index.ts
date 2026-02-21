@@ -8,6 +8,7 @@ export const onboardingSchema = z.object({
     .max(20, "Username too long"),
 
   country: z.string().min(1, "Country is required"),
+  bio: z.string().optional(),
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;

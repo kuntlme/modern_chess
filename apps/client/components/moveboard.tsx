@@ -30,7 +30,7 @@ const MoveBoard = ({
     pairedMoves.push([moves[i], moves[i + 1]]);
   }
   return (
-    <div className="flex h-84 flex-col overflow-y-auto">
+    <div className="flex h-84 flex-col overflow-y-scroll">
       {/* MOVE LIST */}
       <div className="flex-1 space-y-1 overflow-y-auto pr-1 text-sm">
         {/* START */}

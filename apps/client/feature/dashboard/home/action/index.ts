@@ -47,7 +47,7 @@ export async function getDashboardData() {
         black: { select: { username: true } },
       },
       orderBy: { startedAt: "desc" },
-      take: 10,
+      take: 5,
     });
 
     // Format data according to the table

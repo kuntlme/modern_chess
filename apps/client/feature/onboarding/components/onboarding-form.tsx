@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 import { completeOnboarding } from "../action";
 import { OnboardingInput, onboardingSchema } from "../schema";
@@ -97,6 +98,14 @@ const OnboardingForm = () => {
             {errors.country && (
               <FieldError>{errors.country.message}</FieldError>
             )}
+          </Field>
+          <Field>
+            <FieldLabel>Tell something about yourself</FieldLabel>
+            <Textarea
+              id="bio"
+              placeholder="Enter something here"
+              {...register("bio")}
+            />
           </Field>
         </FieldGroup>
         <Field>

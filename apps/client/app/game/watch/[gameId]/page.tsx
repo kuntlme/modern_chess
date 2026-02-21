@@ -33,7 +33,7 @@ interface Params {
 export default function GamePage() {
   const params = useParams();
   const gameId = params.gameId as string;
-  const { state, move, initGame, connected } = useGame();
+  const { state, move, initGame, connected, watchGame } = useGame();
   const [currentMove, setCurrentMove] = useState<number>(-1);
   const [isPromotion, setIsPromotion] = useState<boolean>(false);
   const [promoPiece, setPromoPiece] = useState<PromotionOption>("");
@@ -44,7 +44,7 @@ export default function GamePage() {
   } | null>(null);
 
   useEffect(() => {
-    if (connected) initGame();
+    if (connected) watchGame(gameId);
   }, [connected]);
 
   useEffect(() => {
@@ -102,6 +102,9 @@ export default function GamePage() {
           <div className="flex max-w-[400px] min-w-[340px] flex-1 flex-col">
             {/* Action Bar (Top Right in image) */}
             <div className="mb-4 flex justify-end gap-2">
+              <Badge variant={"default"} className="my-auto h-fit">
+                {connected ? "connected" : "connecting..."}
+              </Badge>
               <Button variant="outline" size="sm" className="gap-2">
                 <Share2 className="h-4 w-4" /> share
               </Button>

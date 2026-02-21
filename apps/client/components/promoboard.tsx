@@ -34,16 +34,32 @@ const PromoBoard = ({
       <DialogClose />
       <DialogContent className="m-0 h-3/12 border p-0">
         <div className="flex h-full items-center justify-center gap-2 border">
-          <Button className="size-30" onClick={() => handleClick("q")}>
+          <Button
+            variant={"outline"}
+            className="size-30"
+            onClick={() => handleClick("q")}
+          >
             <ChessQueenIcon className="size-18" />
           </Button>
-          <Button className="size-30" onClick={() => handleClick("r")}>
+          <Button
+            variant={"outline"}
+            className="size-30"
+            onClick={() => handleClick("r")}
+          >
             <ChessRookIcon className="size-18" />
           </Button>
-          <Button className="size-30" onClick={() => handleClick("b")}>
+          <Button
+            variant={"outline"}
+            className="size-30"
+            onClick={() => handleClick("b")}
+          >
             <ChessBishop className="size-18" />
           </Button>
-          <Button className="size-30" onClick={() => handleClick("n")}>
+          <Button
+            variant={"outline"}
+            className="size-30"
+            onClick={() => handleClick("n")}
+          >
             <ChessKnightIcon className="size-18" />
           </Button>
         </div>

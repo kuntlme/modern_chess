@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import GameBoard from "@/components/chessboard";
 import MoveBoard from "@/components/moveboard";
 import PromoBoard from "@/components/promoboard";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -85,6 +86,9 @@ export default function GamePage() {
           <div className="flex max-w-[400px] min-w-[340px] flex-1 flex-col">
             {/* Action Bar (Top Right in image) */}
             <div className="mb-4 flex justify-end gap-2">
+              <Badge variant={"default"} className="my-auto h-fit">
+                {connected ? "connected" : "connecting..."}
+              </Badge>
               <Button variant="outline" size="sm" className="gap-2">
                 <Share2 className="h-4 w-4" /> share
               </Button>
