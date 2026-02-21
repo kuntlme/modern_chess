@@ -42,6 +42,7 @@ model User {
   name            String?
   username        String?   @unique
   email           String?   @unique
+  bio             String?   @default("I am a chess player.")
   emailVerified   DateTime? @map("email_verified")
   image           String?
   country         String?
