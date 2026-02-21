@@ -191,6 +191,13 @@ export class GameManager {
         user,
         this.handleGameOver.bind(this)
       );
+
+      // Add game id to the users
+      const currentUser = this.users.get(user.id);
+      if (currentUser) currentUser.gameId = game.id;
+      const anotherUser = this.users.get(this.waitingUser.id);
+      if (anotherUser) this.waitingUser.gameId = gameId;
+
       console.log("gameID ", gameId);
       this.games.set(gameId, game);
 

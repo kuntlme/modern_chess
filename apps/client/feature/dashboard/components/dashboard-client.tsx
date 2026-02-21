@@ -13,6 +13,8 @@ import PlayButton from "@/feature/dashboard/components/play-button";
 import { columns, GameList } from "@/feature/dashboard/home/table-info";
 import { usePresence } from "@/hooks/usePresence";
 
+import WatchButton from "./watch-button";
+
 export interface DashboardData {
   rating: number;
   totalGames: number;
@@ -83,13 +85,7 @@ export default function DashboardClient({
 
               <div className="flex flex-col gap-3">
                 <PlayButton />
-                <Button
-                  variant="secondary"
-                  className="h-14 rounded-xl px-8 text-base font-medium"
-                >
-                  <Zap className="mr-2 size-4" />
-                  Practice
-                </Button>
+                <WatchButton />
               </div>
             </div>
           </CardContent>

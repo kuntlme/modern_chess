@@ -11,7 +11,7 @@ const PlayButton = () => {
     <Button
       size="lg"
       className="rounded-xl px-10 py-6 text-lg font-semibold"
-      onClick={() => router.push("/game")}
+      onClick={() => router.push("/game/play")}
     >
       Play Now
     </Button>
