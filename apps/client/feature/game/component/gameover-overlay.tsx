@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 
 interface Props {
   open: boolean;
+  user: "player" | "watcher";
   result: "WIN" | "LOSS" | "DRAW";
   winner?: string | null;
   onRestart?: () => void;
@@ -19,6 +20,7 @@ interface Props {
 
 export function GameOverOverlay({
   open,
+  user,
   result,
   winner,
   onRestart,
@@ -106,9 +108,9 @@ export function GameOverOverlay({
               {/* Title */}
               <div className="space-y-2">
                 <h1
-                  className={`text-4xl font-extrabold tracking-tight ${config.color}`}
+                  className={`text-4xl font-extrabold tracking-tight ${user === "player" ? config.color : "text-foreground"}`}
                 >
-                  {config.title}
+                  {user === "player" ? config.title : "Game finished"}
                 </h1>
 
                 <p className="text-muted-foreground text-sm">

@@ -5,6 +5,9 @@ export type GameState = {
   moves: string[];
   yourTurn: boolean;
   winner?: "w" | "b" | null;
+  whiteId?: string;
+  blackId?: string;
+  gameId?: string;
 };
 
 export type GetGameFromDB = {

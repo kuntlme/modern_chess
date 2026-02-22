@@ -17,6 +17,8 @@ export const WatchGameSchema = z.object({
     fen: z.string(),
     moves: z.array(z.string()),
     turn: z.enum(["w", "b"]),
+    whiteId: z.string(),
+    blackId: z.string(),
   }),
 });
 
@@ -27,6 +29,8 @@ export const InitGameSchema = z.object({
     fen: z.string(),
     moves: z.array(z.string()),
     gameId: z.uuid(),
+    whiteId: z.string(),
+    blackId: z.string(),
   }),
 });
 

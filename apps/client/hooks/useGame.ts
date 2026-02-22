@@ -65,6 +65,8 @@ export function useGame() {
                       : null,
                 status: "ENDED",
                 yourTurn: false,
+                whiteId: game.whiteId,
+                blackId: game.blackId,
               },
             });
           }

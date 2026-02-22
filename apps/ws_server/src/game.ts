@@ -51,6 +51,8 @@ export class Game {
         fen: this.chess.fen(),
         moves: [],
         gameId: this.id,
+        whiteId: this.white.id,
+        blackId: this.black.id,
       },
     });
 
@@ -61,6 +63,8 @@ export class Game {
         fen: this.chess.fen(),
         moves: [],
         gameId: this.id,
+        whiteId: this.white.id,
+        blackId: this.black.id,
       },
     });
   }
@@ -112,6 +116,8 @@ export class Game {
         fen: this.chess.fen(),
         moves: this.moves,
         turn: this.chess.turn(),
+        whiteId: this.white.id,
+        blackId: this.black.id,
       },
     });
     this.checkGameOver();

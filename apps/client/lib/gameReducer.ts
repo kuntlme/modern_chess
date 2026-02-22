@@ -13,6 +13,8 @@ export function gameReducer(
         fen: message.payload.fen,
         moves: message.payload.moves,
         status: "PLAYING",
+        whiteId: message.payload.whiteId,
+        blackId: message.payload.blackId,
       };
     }
     case "DB_GAME_LOADED": {
@@ -22,6 +24,8 @@ export function gameReducer(
         fen: message.payload.fen,
         moves: message.payload.moves,
         winner: message.payload.winner,
+        whiteId: message.payload.whiteId,
+        blackId: message.payload.blackId,
       };
       break;
     }
@@ -32,6 +36,9 @@ export function gameReducer(
         fen: message.payload.fen,
         moves: message.payload.moves,
         yourTurn: message.payload.color === "w",
+        whiteId: message.payload.whiteId,
+        blackId: message.payload.blackId,
+        gameId: message.payload.gameId,
       };
     case "RESUME_GAME":
       return {

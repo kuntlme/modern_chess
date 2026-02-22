@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { Flag, Handshake, Share2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+
+import "dotenv/config";
+import { Check, Copy, CopyIcon, Flag, Handshake, Share2 } from "lucide-react";
 import { motion } from "motion/react";
 
 import GameBoard from "@/components/chessboard";
@@ -10,22 +13,42 @@ import PromoBoard from "@/components/promoboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import MatchmakingLoader from "@/feature/game/component/finding-players.";
+import MatchmakingLoader from "@/feature/game/component/finding-players";
 import { GameOverOverlay } from "@/feature/game/component/gameover-overlay";
+import PlayerCard from "@/feature/game/component/player-card";
 import { useGame } from "@/hooks/useGame";
 import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export default function GamePage() {
+  const session = useSession();
   const { state, move, initGame, connected } = useGame();
   const [currentMove, setCurrentMove] = useState<number>(-1);
   const [isPromotion, setIsPromotion] = useState<boolean>(false);
   const [promoPiece, setPromoPiece] = useState<PromotionOption>("");
   const [showGameOver, setShowGameOver] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [pendingMove, setPendingMove] = useState<{
     from: string;
     to: string;
   } | null>(null);
+
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   useEffect(() => {
     if (connected) initGame();
@@ -89,9 +112,38 @@ export default function GamePage() {
               <Badge variant={"default"} className="my-auto h-fit">
                 {connected ? "connected" : "connecting..."}
               </Badge>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Share2 className="h-4 w-4" /> share
-              </Button>
+
+              {/* Share Button */}
+              <Dialog>
+                <DialogTrigger>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Share2 className="h-4 w-4" /> share
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogDescription>
+                    Copy to share with others
+                  </DialogDescription>
+                  <div className="flex h-11.5 items-center justify-between overflow-hidden rounded-full border px-1">
+                    <p className="text-muted-foreground max-w-56 truncate overflow-hidden px-2.5 text-sm">
+                      {`${process.env.NEXT_PUBLIC_WEBSITE_URL}/game/watch/${state.gameId}`}
+                    </p>
+                    <Button
+                      size="icon"
+                      className="rounded-full"
+                      onClick={() => {
+                        handleCopy(
+                          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/game/watch/${state.gameId}`
+                        );
+                      }}
+                    >
+                      {copied === true ? <Check /> : <CopyIcon />}
+                      <span className="sr-only">Copy</span>
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
               <Button variant="outline" size="sm">
                 Request for draw
               </Button>
@@ -103,12 +155,16 @@ export default function GamePage() {
             {/* Game Info Card */}
             <Card className="border-primary/10 flex flex-1 flex-col overflow-hidden border-2 shadow-lg">
               <CardContent className="flex flex-1 flex-col space-y-6 p-6">
-                {/* Player 1 (Opponent) */}
-                <div className="bg-secondary/40 border-border/50 hover:bg-secondary/60 flex h-32 w-full flex-col items-center justify-center rounded-xl border-2 transition-all">
-                  <span className="text-2xl font-bold tracking-tight opacity-70">
-                    player 1
-                  </span>
-                </div>
+                {/* You */}
+                <PlayerCard
+                  playerId={
+                    state.whiteId === session.data?.user.id
+                      ? state.whiteId
+                      : state.blackId
+                  }
+                  isTurn={state.yourTurn}
+                  isGameOver={state.status === "ENDED"}
+                />
 
                 {/* Moves Section */}
                 <div className="flex flex-1 flex-col overflow-hidden">
@@ -128,11 +184,15 @@ export default function GamePage() {
                 </div>
 
                 {/* Player 2 (You) */}
-                <div className="bg-primary/10 border-primary/20 flex h-32 w-full flex-col items-center justify-center rounded-xl border-2 shadow-inner">
-                  <span className="text-primary text-2xl font-bold tracking-tight">
-                    player 2
-                  </span>
-                </div>
+                <PlayerCard
+                  playerId={
+                    state.whiteId !== session.data?.user.id
+                      ? state.whiteId
+                      : state.blackId
+                  }
+                  isTurn={!state.yourTurn}
+                  isGameOver={state.status === "ENDED"}
+                />
               </CardContent>
             </Card>
           </div>
@@ -142,6 +202,7 @@ export default function GamePage() {
       <PromoBoard isPromotion={isPromotion} setPromoPiece={setPromoPiece} />
 
       <GameOverOverlay
+        user="player"
         open={showGameOver}
         result={gameResult!}
         winner={state.winner}
