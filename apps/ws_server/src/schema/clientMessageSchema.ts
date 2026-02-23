@@ -22,6 +22,10 @@ export const MoveSchema = z.object({
   }),
 });
 
+export const ResignationSchema = z.object({
+  type: z.literal("RESIGN"),
+});
+
 export const ExitSchema = z.object({
   type: z.literal("EXIT"),
   payload: z.object({
@@ -41,6 +45,7 @@ export const ClientMessageSchema = z.discriminatedUnion("type", [
   WatchGameSchema,
   InitGameSchema,
   MoveSchema,
+  ResignationSchema,
   ExitSchema,
   GetOnlineUsersSchema,
   PingSchema,

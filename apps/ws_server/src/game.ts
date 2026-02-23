@@ -18,7 +18,8 @@ export class Game {
 
   private chess: Chess;
   private moves: string[];
-
+  private gameOver: boolean = false;
+  private winner?: "w" | "b";
   private startTime: Date;
 
   watchers = new Map<string, User>();
@@ -107,6 +108,13 @@ export class Game {
     this.checkGameOver();
   }
 
+  handleResign(user: User) {
+    this.gameOver = true;
+    const isWhite = user.id === this.white.id;
+    this.winner = isWhite ? "b" : "w";
+    this.checkGameOver();
+  }
+
   handleWatcher(user: User) {
     const existing = this.watchers.get(user.id);
     if (!existing) this.watchers.set(user.id, user);
@@ -124,7 +132,7 @@ export class Game {
   }
 
   checkGameOver() {
-    if (!this.chess.isGameOver()) return;
+    if (!this.chess.isGameOver() && !this.gameOver) return;
     let reason: GameOverReason;
     let winner: "w" | "b" | null = null;
     if (this.chess.isCheckmate()) {
@@ -133,7 +141,11 @@ export class Game {
       winner = this.chess.turn() === "w" ? "b" : "w";
     }
     // TODO: add condition from Resignation & Timeout, winner: "w" or "b", "Abandaned" winner: null
-    else if (this.chess.isStalemate()) {
+    else if (this.gameOver) {
+      if (!this.winner) return;
+      reason = "RESIGNATION";
+      winner = this.winner;
+    } else if (this.chess.isStalemate()) {
       reason = "STALEMATE";
     } else if (this.chess.isThreefoldRepetition()) {
       reason = "DRAW_BY_REPETITION";

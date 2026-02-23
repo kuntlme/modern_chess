@@ -244,6 +244,21 @@ export class GameManager {
         game.handleMove(user, message.payload);
         break;
       }
+      case "RESIGN": {
+        if (!user.gameId) {
+          this.send(user, {
+            type: "ERROR",
+            payload: {
+              message: "You are not in game",
+            },
+          });
+          return;
+        }
+        const game = this.games.get(user.gameId);
+        if (!game) return;
+        game.handleResign(user);
+        break;
+      }
       case "EXIT": {
         //TODO:
         break;

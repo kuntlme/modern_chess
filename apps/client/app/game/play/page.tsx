@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useSession } from "next-auth/react";
 
+import { DialogTitle } from "@radix-ui/react-dialog";
 import "dotenv/config";
 import { Check, Copy, CopyIcon, Flag, Handshake, Share2 } from "lucide-react";
 import { motion } from "motion/react";
@@ -10,6 +11,17 @@ import { motion } from "motion/react";
 import GameBoard from "@/components/chessboard";
 import MoveBoard from "@/components/moveboard";
 import PromoBoard from "@/components/promoboard";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +29,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -29,7 +42,7 @@ import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export default function GamePage() {
   const session = useSession();
-  const { state, move, initGame, connected } = useGame();
+  const { state, move, initGame, sendResign, connected } = useGame();
   const [currentMove, setCurrentMove] = useState<number>(-1);
   const [isPromotion, setIsPromotion] = useState<boolean>(false);
   const [promoPiece, setPromoPiece] = useState<PromotionOption>("");
@@ -115,7 +128,7 @@ export default function GamePage() {
 
               {/* Share Button */}
               <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="gap-2">
                     <Share2 className="h-4 w-4" /> share
                   </Button>
@@ -143,13 +156,41 @@ export default function GamePage() {
                   </div>
                 </DialogContent>
               </Dialog>
+              {state.status === "PLAYING" && (
+                <>
+                  <Button variant="outline" size="sm">
+                    Request for draw
+                  </Button>
 
-              <Button variant="outline" size="sm">
-                Request for draw
-              </Button>
-              <Button variant="destructive" size="sm">
-                Resign
-              </Button>
+                  {/* Resign button */}
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" size="sm">
+                        Resign
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you sure to resign?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          By this you will lose the game
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-destructive text-destructive-foreground"
+                          onClick={() => sendResign()}
+                        >
+                          Yes, Resign
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </>
+              )}
             </div>
 
             {/* Game Info Card */}

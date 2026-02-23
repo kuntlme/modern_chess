@@ -87,6 +87,14 @@ export function useGame() {
     send({ type: "INIT_GAME" });
   }, [connected, send]);
 
+  const sendResign = useCallback(() => {
+    if (!connected) {
+      console.log("Cannot resign - not connected");
+      return false;
+    }
+    send({ type: "RESIGN" });
+  }, [connected, send]);
+
   const watchGame = useCallback(
     (gameId: string) => {
       if (!connected || !gameId) {
@@ -100,7 +108,7 @@ export function useGame() {
         },
       });
     },
-    [connected, send]
+    [connected]
   );
 
   /**
@@ -201,6 +209,7 @@ export function useGame() {
     move,
     initGame,
     watchGame,
+    sendResign,
     // New utilities
     validateMove,
     getLegalMoves,
