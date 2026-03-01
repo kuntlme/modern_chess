@@ -8,6 +8,7 @@ export type GameState = {
   whiteId?: string;
   blackId?: string;
   gameId?: string;
+  drawOfferIncoming?: boolean;
 };
 
 export type GetGameFromDB = {

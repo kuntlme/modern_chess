@@ -56,6 +56,18 @@ export function gameReducer(
         yourTurn: !state.yourTurn,
       };
     }
+    case "DRAW_OFFERED": {
+      return {
+        ...state,
+        drawOfferIncoming: true,
+      };
+    }
+    case "DRAW_DECLINED": {
+      return {
+        ...state,
+        drawOfferIncoming: false,
+      };
+    }
     case "GAME_OVER":
       return {
         ...state,

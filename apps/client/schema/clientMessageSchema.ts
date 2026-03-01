@@ -20,7 +20,7 @@ export const MoveSchema = z.object({
   payload: z.object({
     from: square,
     to: square,
-    promotion: z.enum(["q", "r", "b", "n", ""]),
+    promotion: PromotionOptionSchema,
   }),
 });
 
@@ -39,6 +39,17 @@ export const GetOnlineUsersSchema = z.object({
   type: z.literal("GET_ONLINE_USERS"),
 });
 
+export const DrawRequestSchema = z.object({
+  type: z.literal("DRAW_REQUEST"),
+});
+
+export const DrawResponseSchema = z.object({
+  type: z.literal("DRAW_RESPONSE"),
+  payload: z.object({
+    accept: z.boolean(),
+  }),
+});
+
 export const PingSchema = z.object({
   type: z.literal("PING"),
 });
@@ -49,10 +60,14 @@ export const ClientMessageSchema = z.discriminatedUnion("type", [
   MoveSchema,
   ResignationSchema,
   ExitSchema,
+  DrawRequestSchema,
+  DrawResponseSchema,
   GetOnlineUsersSchema,
   PingSchema,
 ]);
 
 export type PromotionOption = z.infer<typeof PromotionOptionSchema>;
 export type ClientMessage = z.infer<typeof ClientMessageSchema>;
+export type Square = z.infer<typeof square>;
 export type MovePayload = z.infer<typeof MoveSchema>["payload"];
+export type DrawResponsePayload = z.infer<typeof DrawResponseSchema>["payload"];

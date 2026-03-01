@@ -1,15 +1,25 @@
 import { Chess } from "chess.js";
+import { networkInterfaces } from "os";
 
 import { saveGameToDB } from "./save-to-db.js";
 import type {
   ClientMessage,
+  DrawResponsePayload,
   MovePayload,
 } from "./schema/clientMessageSchema.js";
 import type {
   GameOverReason,
   ServerMessage,
 } from "./schema/serverMessageSchema.js";
-import type { User } from "./types.js";
+import type { DrawRequest, User } from "./types.js";
+
+type Color = "w" | "b";
+
+interface gameResult {
+  reason: GameOverReason;
+  winner: Color | null;
+  endAt: Date;
+}
 
 export class Game {
   id: string;
@@ -18,9 +28,12 @@ export class Game {
 
   private chess: Chess;
   private moves: string[];
-  private gameOver: boolean = false;
-  private winner?: "w" | "b";
+
+  private result?: gameResult;
+
   private startTime: Date;
+
+  private drawRequest: DrawRequest = null;
 
   watchers = new Map<string, User>();
 
@@ -105,67 +118,107 @@ export class Game {
         moves: this.moves,
       },
     });
-    this.checkGameOver();
+    this.checkEngineGameOver();
   }
 
   handleResign(user: User) {
-    this.gameOver = true;
-    const isWhite = user.id === this.white.id;
-    this.winner = isWhite ? "b" : "w";
-    this.checkGameOver();
+    if (this.result) return;
+
+    const winner: Color = user.id === this.white.id ? "b" : "w";
+
+    this.endGame("RESIGNATION", winner);
   }
 
-  handleWatcher(user: User) {
-    const existing = this.watchers.get(user.id);
-    if (!existing) this.watchers.set(user.id, user);
-    this.send(user, {
-      type: "WATCH_GAME",
-      payload: {
-        fen: this.chess.fen(),
-        moves: this.moves,
-        turn: this.chess.turn(),
-        whiteId: this.white.id,
-        blackId: this.black.id,
-      },
-    });
-    this.checkGameOver();
-  }
-
-  checkGameOver() {
-    if (!this.chess.isGameOver() && !this.gameOver) return;
-    let reason: GameOverReason;
-    let winner: "w" | "b" | null = null;
-    if (this.chess.isCheckmate()) {
-      console.log("checkmate");
-      reason = "CHECKMATE";
-      winner = this.chess.turn() === "w" ? "b" : "w";
-    }
-    // TODO: add condition from Resignation & Timeout, winner: "w" or "b", "Abandaned" winner: null
-    else if (this.gameOver) {
-      if (!this.winner) return;
-      reason = "RESIGNATION";
-      winner = this.winner;
-    } else if (this.chess.isStalemate()) {
-      reason = "STALEMATE";
-    } else if (this.chess.isThreefoldRepetition()) {
-      reason = "DRAW_BY_REPETITION";
-    } else if (this.chess.isInsufficientMaterial()) {
-      reason = "DRAW_BY_INSUFFICIENT_MATERIAL";
-    } else if (this.chess.isDrawByFiftyMoves()) {
-      reason = "DRAW_BY_FIFTY_MOVE_RULE";
-    } else {
-      console.error("Unknown reason for game over");
+  handleDrawRequest(user: User) {
+    // already pending
+    if (this.drawRequest) {
       return;
     }
-    this.broadcast({
-      type: "GAME_OVER",
+    // Cannot request when not your turn
+    const isWhite = user.id === this.white.id;
+    const turn = this.chess.turn(); // "w" | "b"
+
+    if ((turn === "w" && !isWhite) || (turn === "b" && isWhite)) {
+      return this.send(user, {
+        type: "ERROR",
+        payload: {
+          message: "Not your turn",
+        },
+      });
+    }
+
+    this.drawRequest = {
+      requestBy: turn,
+      createdAt: new Date(),
+    };
+
+    const opponent = isWhite ? this.black : this.white;
+
+    this.send(opponent, {
+      type: "DRAW_OFFERED",
       payload: {
-        reason,
-        winner,
+        by: turn,
       },
     });
+  }
 
-    // Save game to db
+  handleDrawResponse(user: User, response: DrawResponsePayload) {
+    if (!this.drawRequest || this.result) return;
+    const playerColor = user.id === this.white.id ? "w" : "b";
+
+    if (playerColor === this.drawRequest.requestBy) return;
+
+    if (response.accept) {
+      this.endGame("DRAW_AGREEMENT", null);
+    } else {
+      const opponent = user.id === this.white.id ? this.black : this.white;
+      this.send(opponent, {
+        type: "DRAW_DECLINED",
+        payload: {
+          by: playerColor,
+        },
+      });
+      this.drawRequest = null;
+    }
+  }
+
+  private checkEngineGameOver() {
+    if (!this.chess.isGameOver() || this.result) return;
+
+    if (this.chess.isCheckmate()) {
+      const winner: Color = this.chess.turn() === "w" ? "b" : "w";
+      return this.endGame("CHECKMATE", winner);
+    }
+
+    if (this.chess.isStalemate()) {
+      return this.endGame("STALEMATE", null);
+    }
+
+    if (this.chess.isThreefoldRepetition()) {
+      return this.endGame("DRAW_BY_REPETITION", null);
+    }
+
+    if (this.chess.isInsufficientMaterial()) {
+      return this.endGame("DRAW_BY_INSUFFICIENT_MATERIAL", null);
+    }
+
+    if (this.chess.isDrawByFiftyMoves()) {
+      this.endGame("DRAW_BY_FIFTY_MOVE_RULE", null);
+    }
+  }
+
+  private endGame(reason: GameOverReason, winner: Color | null) {
+    if (this.result) return;
+    this.result = {
+      reason,
+      winner,
+      endAt: new Date(),
+    };
+    this.broadcast({
+      type: "GAME_OVER",
+      payload: { reason, winner },
+    });
+
     saveGameToDB({
       gameId: this.id,
       whiteId: this.white.id,
@@ -181,6 +234,30 @@ export class Game {
     this.onGameOver(this.id);
   }
 
+  handleWatcher(user: User) {
+    const existing = this.watchers.get(user.id);
+    if (!existing) this.watchers.set(user.id, user);
+    this.send(user, {
+      type: "WATCH_GAME",
+      payload: {
+        fen: this.chess.fen(),
+        moves: this.moves,
+        turn: this.chess.turn(),
+        whiteId: this.white.id,
+        blackId: this.black.id,
+      },
+    });
+    if (this.result) {
+      this.send(user, {
+        type: "GAME_OVER",
+        payload: {
+          reason: this.result.reason,
+          winner: this.result.winner,
+        },
+      });
+    }
+  }
+
   resume(user: User) {
     this.send(user, {
       type: "RESUME_GAME",
@@ -194,6 +271,16 @@ export class Game {
         gameId: this.id,
       },
     });
+
+    if (this.result) {
+      this.send(user, {
+        type: "GAME_OVER",
+        payload: {
+          reason: this.result.reason,
+          winner: this.result.winner,
+        },
+      });
+    }
   }
 
   private send(user: User, data: ServerMessage) {

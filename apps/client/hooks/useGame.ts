@@ -95,6 +95,24 @@ export function useGame() {
     send({ type: "RESIGN" });
   }, [connected, send]);
 
+  const sendDrawOffer = useCallback(() => {
+    if (!connected) return false;
+
+    return send({ type: "DRAW_REQUEST" });
+  }, [connected, send]);
+
+  const respondToDraw = useCallback(
+    (accept: boolean) => {
+      if (!connected) return false;
+
+      return send({
+        type: "DRAW_RESPONSE",
+        payload: { accept },
+      });
+    },
+    [connected, send]
+  );
+
   const watchGame = useCallback(
     (gameId: string) => {
       if (!connected || !gameId) {
@@ -210,6 +228,8 @@ export function useGame() {
     initGame,
     watchGame,
     sendResign,
+    sendDrawOffer,
+    respondToDraw,
     // New utilities
     validateMove,
     getLegalMoves,

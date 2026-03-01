@@ -42,7 +42,15 @@ import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export default function GamePage() {
   const session = useSession();
-  const { state, move, initGame, sendResign, connected } = useGame();
+  const {
+    state,
+    move,
+    initGame,
+    sendResign,
+    respondToDraw,
+    sendDrawOffer,
+    connected,
+  } = useGame();
   const [currentMove, setCurrentMove] = useState<number>(-1);
   const [isPromotion, setIsPromotion] = useState<boolean>(false);
   const [promoPiece, setPromoPiece] = useState<PromotionOption>("");
@@ -120,6 +128,33 @@ export default function GamePage() {
         {/* RIGHT: SIDE PANEL */}
         {state.status !== "IDLE" && (
           <div className="flex max-w-[400px] min-w-[340px] flex-1 flex-col">
+            {/* Respond draw alert */}
+            {state.drawOfferIncoming && (
+              <AlertDialog open>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Opponent offers a draw</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Accepting will end the game as a draw.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => respondToDraw(false)}>
+                      Decline
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        respondToDraw(true);
+                        state.drawOfferIncoming = false;
+                      }}
+                    >
+                      Accept
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+
             {/* Action Bar (Top Right in image) */}
             <div className="mb-4 flex justify-end gap-2">
               <Badge variant={"default"} className="my-auto h-fit">
@@ -158,9 +193,38 @@ export default function GamePage() {
               </Dialog>
               {state.status === "PLAYING" && (
                 <>
-                  <Button variant="outline" size="sm">
-                    Request for draw
-                  </Button>
+                  {/* Request for draw button */}
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!state.yourTurn}
+                      >
+                        Request for draw
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you sure to send request for draw?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          If opponent accept request then the match will ended
+                          with draw.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-destructive text-destructive-foreground"
+                          onClick={() => sendDrawOffer()}
+                        >
+                          Request for draw
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
 
                   {/* Resign button */}
                   <AlertDialog>

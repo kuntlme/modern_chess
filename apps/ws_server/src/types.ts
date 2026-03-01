@@ -9,3 +9,8 @@ export type User = {
   lastSeen: number;
   status: UserStatus;
 };
+
+export type DrawRequest = {
+  requestBy: "w" | "b";
+  createdAt: Date;
+} | null;

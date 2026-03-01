@@ -9,6 +9,7 @@ const gameOverReasonSchema = z.enum([
   "RESIGNATION",
   "TIMEOUT",
   "ABANDONED",
+  "DRAW_AGREEMENT",
 ]);
 
 export const WatchGameSchema = z.object({
@@ -116,6 +117,20 @@ export const UserOutGameSchema = z.object({
   payload: OnlineUserSchema,
 });
 
+export const DrawOfferedSchema = z.object({
+  type: z.literal("DRAW_OFFERED"),
+  payload: z.object({
+    by: z.enum(["w", "b"]),
+  }),
+});
+
+export const DrawDeclinedSchema = z.object({
+  type: z.literal("DRAW_DECLINED"),
+  payload: z.object({
+    by: z.enum(["w", "b"]),
+  }),
+});
+
 export const PongSchema = z.object({
   type: z.literal("PONG"),
 });
@@ -126,6 +141,8 @@ export const ServerMessageSchema = z.discriminatedUnion("type", [
   MoveSchema,
   ResumeGameSchema,
   GameOverSchema,
+  DrawOfferedSchema,
+  DrawDeclinedSchema,
   ErrorSchema,
   UserJoinedSchema,
   OnlineUsersSchema,

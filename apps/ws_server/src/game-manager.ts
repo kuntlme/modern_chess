@@ -263,6 +263,36 @@ export class GameManager {
         //TODO:
         break;
       }
+      case "DRAW_REQUEST": {
+        if (!user.gameId) {
+          this.send(user, {
+            type: "ERROR",
+            payload: {
+              message: "You are not in game",
+            },
+          });
+          return;
+        }
+        const game = this.games.get(user.gameId);
+        if (!game) return;
+        game.handleDrawRequest(user);
+        break;
+      }
+      case "DRAW_RESPONSE": {
+        if (!user.gameId) {
+          this.send(user, {
+            type: "ERROR",
+            payload: {
+              message: "You are not in game",
+            },
+          });
+          return;
+        }
+        const game = this.games.get(user.gameId);
+        if (!game) return;
+        game.handleDrawResponse(user, message.payload);
+        break;
+      }
       case "WATCH_GAME": {
         const game = this.games.get(message.payload.gameId);
         if (!game) {
