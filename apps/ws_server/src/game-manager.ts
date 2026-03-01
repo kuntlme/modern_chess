@@ -164,6 +164,9 @@ export class GameManager {
         console.log("gameID", gameId);
         this.games.set(gameId, game);
 
+        existing.gameId = gameId;
+        this.waitingUser.gameId = gameId;
+
         // Update both users status to in_game
         this.waitingUser.status = "in_game";
         existing.status = "in_game";
