@@ -28,6 +28,9 @@ function GameBoard({
   const [optionSquares, setOptionSquares] = useState<
     Record<string, React.CSSProperties>
   >({});
+  const [lastMoveSquares, setLastMoveSquares] = useState<
+    Record<string, React.CSSProperties>
+  >({});
 
   // Create chess instance from current FEN
   const game = useMemo(() => new Chess(currentFen), [currentFen]);
@@ -62,7 +65,11 @@ function GameBoard({
       if (move.captured) {
         // 🔴 Red ring for capture moves
         newMoveSquares[move.to] = {
-          boxShadow: "inset 0 0 0 4px rgba(255, 80, 80, 0.7)",
+          boxShadow: "inset 0 0 0 3px rgba(255, 80, 80, 0.7)",
+          background:
+            "radial-gradient(circle, transparent 30%, transparent 35%)",
+          backgroundSize: "10% 10%",
+          backgroundPosition: "center",
           borderRadius: "50%",
         };
       } else {
@@ -86,7 +93,7 @@ function GameBoard({
     setMoveSquares(newMoveSquares);
   };
 
-  // 🔴 Highlight king when in check
+  // 🔴 Highlight king when in check (with red background)
   useEffect(() => {
     const tempGame = new Chess(currentFen);
 
@@ -100,21 +107,65 @@ function GameBoard({
           const sq = `${file}${rank}` as Square;
           const p = tempGame.get(sq);
           if (p?.type === "k" && p.color === kingColor) {
-            setOptionSquares({
+            setOptionSquares((prev) => ({
+              ...prev,
               [sq]: {
-                boxShadow:
-                  "0 0 0 3px rgba(255, 50, 50, 0.8), 0 0 15px rgba(255, 0, 0, 0.4)",
-                borderRadius: "4px",
+                backgroundColor: "rgba(255, 80, 80, 0.5)",
               },
-            });
+            }));
             return;
           }
         }
       }
     } else {
-      setOptionSquares({});
+      setOptionSquares((prev) => {
+        const newPrev = { ...prev };
+        // Remove check highlight if no longer in check
+        for (const key of Object.keys(newPrev)) {
+          if (newPrev[key]?.backgroundColor?.includes("255, 80, 80")) {
+            delete newPrev[key];
+          }
+        }
+        return newPrev;
+      });
     }
   }, [currentFen]);
+
+  // 🎯 Highlight last move (source and destination squares)
+  useEffect(() => {
+    if (state.moves.length > 0 && currentMove !== null && currentMove >= 0) {
+      const lastMoveStr = state.moves[currentMove];
+      const tempGame = new Chess();
+
+      // Replay all moves up to current to get the last move details
+      for (let i = 0; i < currentMove; i++) {
+        tempGame.move(state.moves[i]);
+      }
+
+      // Get the last move in verbose format to extract from/to
+      const lastMove = tempGame.move(lastMoveStr);
+
+      if (lastMove) {
+        setLastMoveSquares({
+          [lastMove.from]: {
+            backgroundColor: "rgba(255, 255, 0, 0.25)",
+          },
+          [lastMove.to]: {
+            backgroundColor: "rgba(255, 255, 0, 0.25)",
+          },
+        });
+      }
+    } else {
+      setLastMoveSquares({});
+    }
+  }, [currentMove, state.moves]);
+
+  // Clear last move highlights when game ends or resets
+  useEffect(() => {
+    if (state.status === "ENDED" || state.status === "IDLE") {
+      setLastMoveSquares({});
+    }
+  }, [state.status]);
 
   // Update board when navigating move history
   useEffect(() => {
@@ -214,7 +265,7 @@ function GameBoard({
       clearHighlights();
       return true;
     },
-    squareStyles: { ...moveSquares, ...optionSquares },
+    squareStyles: { ...lastMoveSquares, ...moveSquares, ...optionSquares },
   };
 
   return (
