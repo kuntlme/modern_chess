@@ -2,10 +2,19 @@
 import { useEffect, useState } from "react";
 
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 import { DialogTitle } from "@radix-ui/react-dialog";
 import "dotenv/config";
-import { Check, Copy, CopyIcon, Flag, Handshake, Share2 } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Copy,
+  CopyIcon,
+  Flag,
+  Handshake,
+  Share2,
+} from "lucide-react";
 import { motion } from "motion/react";
 
 import GameBoard from "@/components/chessboard";
@@ -254,6 +263,16 @@ export default function GamePage() {
                     </AlertDialogContent>
                   </AlertDialog>
                 </>
+              )}
+              {state.status === "ENDED" && (
+                <Button
+                  variant={"destructive"}
+                  size={"sm"}
+                  onClick={() => redirect("/dashboard")}
+                  className="cursor-pointer"
+                >
+                  Back to dashboard <ArrowRight />
+                </Button>
               )}
             </div>
 
