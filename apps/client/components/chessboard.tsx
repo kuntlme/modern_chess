@@ -77,7 +77,7 @@ function GameBoard({
         newMoveSquares[move.to] = {
           background:
             "radial-gradient(circle, rgba(0,0,0,0.35) 20%, transparent 25%)",
-          backgroundSize: "40% 40%",
+          backgroundSize: "60% 60%",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           borderRadius: "50%",

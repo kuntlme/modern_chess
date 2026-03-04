@@ -53,6 +53,14 @@ model User {
   profileComplete Boolean   @default(false)
   rating          Int       @default(800)
 
+    // Friend Requests
+  sentRequests     FriendRequest[] @relation("SentRequests")
+  receivedRequests FriendRequest[] @relation("ReceivedRequests")
+
+  // Friendships
+  friendships1 Friendship[] @relation("FriendshipUser1")
+  friendships2 Friendship[] @relation("FriendshipUser2")
+
   // Appearance
   theme String @default("light")
   language String @default("en")
@@ -70,6 +78,49 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model FriendRequest {
+  id        String   @id @default(uuid())
+
+  fromId    String   @map("from_id")
+  toId      String   @map("to_id")
+
+  from      User     @relation("SentRequests", fields: [fromId], references: [id], onDelete: Cascade)
+  to        User     @relation("ReceivedRequests", fields: [toId], references: [id], onDelete: Cascade)
+
+  status    FriendRequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([fromId, toId]) // prevents duplicate requests
+  @@index([toId])
+  @@map("friend_requests")
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+model Friendship {
+  id        String   @id @default(uuid())
+
+  user1Id   String   @map("user1_id")
+  user2Id   String   @map("user2_id")
+
+  user1     User     @relation("FriendshipUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User     @relation("FriendshipUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@map("friendships")
 }
 
 model Game {
@@ -107,28 +158,3 @@ enum GameWinner {
   BLACK
   DRAW
 }
-
-// model Move {
-//   id     String @id @default(uuid())
-//   gameId String
-
-//   moveUci String // e2e4, e7e8q
-//   moveNo  Int
-
-//   createdAt DateTime @default(now())
-
-//   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
-
-//   @@unique([gameId, moveNo])
-//   @@index([gameId])
-// }
-
-// model GameResult {
-//   id     String @id @default(uuid())
-//   gameId String @unique
-
-//   reason String // checkmate, timeout, resign
-//   pgn    String?
-
-//   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
-// }
