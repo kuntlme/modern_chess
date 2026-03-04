@@ -27,5 +27,8 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.19.0"
+  }
 }
