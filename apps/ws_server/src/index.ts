@@ -8,7 +8,8 @@ import type { User } from "./types.js";
 
 dotenv.config();
 
-const wss = new WebSocketServer({ port: 8080 });
+const PORT = parseInt(process.env.PORT || "8080", 10);
+const wss = new WebSocketServer({ port: PORT });
 
 const gameManager = new GameManager();
 
@@ -82,4 +83,4 @@ wss.on("connection", function connection(ws, req) {
   });
 });
 
-console.log("♟️ WebSocket Chess Server running on ws://localhost:8080");
+console.log(`♟️ WebSocket Chess Server running on port: ${PORT}`);
