@@ -1,25 +1,27 @@
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-RUN corepack enable
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
-COPY apps ./apps
-COPY packages ./packages
-
-RUN pnpm install --frozen-lockfile
-
-RUN pnpm --filter @repo/prisma exec prisma generate
-RUN pnpm turbo run build --filter=client
-
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/apps/client/.next/standalone ./
-COPY --from=builder /app/apps/client/.next/static ./apps/client/.next/static
-COPY --from=builder /app/apps/client/public ./apps/client/public
+RUN corepack enable
+
+# copy workspace config
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+
+# copy code
+COPY apps ./apps
+COPY packages ./packages
+
+# install deps
+RUN pnpm install --frozen-lockfile
+
+# generate prisma
+RUN pnpm --filter @repo/prisma exec prisma generate
+
+# build next app
+RUN pnpm turbo run build --filter=client
+
+ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["node", "apps/client/server.js"]
+CMD ["pnpm", "--filter", "client", "start"]
