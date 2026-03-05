@@ -114,7 +114,7 @@ export function useGameSocket() {
   useEffect(() => {
     const loadToken = async () => {
       try {
-        const res = await fetch("/api/auth/token");
+        const res = await fetch("/api/auth/token", { credentials: "include" });
         if (!res.ok) throw new Error("No token");
         const { wsToken } = await res.json();
         console.log("Token loaded");
