@@ -1,8 +1,9 @@
 import { getToken } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 
 import jwt from "jsonwebtoken";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const nextAuthToken = await getToken({
       req,
@@ -10,13 +11,11 @@ export async function GET(req: Request) {
     });
     if (!nextAuthToken?.sub)
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-
         status: 401,
 
         headers: { "Content-Type": "application/json" },
       });
     const wsToken = jwt.sign(
-      
       { sub: nextAuthToken.sub },
       process.env.WS_SECRET!,
       { expiresIn: "30s" }
