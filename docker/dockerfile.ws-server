@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps ./apps
+COPY packages ./packages
+
+RUN pnpm install --frozen-lockfile
+
+RUN pnpm --filter @repo/prisma exec prisma generate
+RUN pnpm turbo run build --filter=ws_server
+
+EXPOSE 8080
+
+CMD ["pnpm", "--filter", "ws_server", "start"]
