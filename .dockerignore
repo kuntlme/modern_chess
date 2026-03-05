@@ -1,0 +1,62 @@
+# -----------------------------
+# Dependencies
+# -----------------------------
+node_modules
+**/node_modules
+.pnpm-store
+
+# -----------------------------
+# Build outputs
+# -----------------------------
+.next
+**/.next
+dist
+**/dist
+build
+**/build
+out
+
+# Turborepo cache
+.turbo
+**/.turbo
+
+# -----------------------------
+# Logs
+# -----------------------------
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# -----------------------------
+# Environment files
+# -----------------------------
+.env
+.env.*
+!.env.example
+
+# -----------------------------
+# Git
+# -----------------------------
+.git
+.gitignore
+.github
+
+# -----------------------------
+# Editor / OS junk
+# -----------------------------
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Tests / coverage
+# -----------------------------
+coverage
+**/coverage
+
+# -----------------------------
+# Docs / misc
+# -----------------------------
+*.md
+docs
