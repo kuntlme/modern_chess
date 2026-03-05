@@ -2,8 +2,9 @@
 
 import { success } from "zod";
 
+import prisma from "@repo/prisma/client";
+
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/db";
 
 export const getUserData = async () => {
   const session = await auth();

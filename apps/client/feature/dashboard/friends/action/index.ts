@@ -2,9 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 
-import { auth } from "@/lib/auth";
 // adjust to your auth helper
-import prisma from "@/lib/db";
+import prisma from "@repo/prisma/client";
+
+import { auth } from "@/lib/auth";
 
 /*
 UTILITY

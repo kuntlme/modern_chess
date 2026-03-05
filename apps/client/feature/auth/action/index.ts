@@ -1,7 +1,8 @@
 "use server";
 
+import prisma from "@repo/prisma/client";
+
 import { auth, signIn, signOut } from "@/lib/auth";
-import prisma from "@/lib/db";
 
 export const getUserById = async (id: string) => {
   try {

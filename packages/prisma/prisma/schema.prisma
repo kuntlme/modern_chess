@@ -13,14 +13,15 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -39,27 +40,34 @@ model Session {
 model User {
   id              String    @id @default(cuid())
   name            String?
+  username        String?   @unique
   email           String?   @unique
-  bio       String? @default("I am a chess player.")
+  bio             String?   @default("I am a chess player.")
   emailVerified   DateTime? @map("email_verified")
   image           String?
-  profileComplete Boolean   @default(false)
-  rating          Int       @default(800)
-  username        String?   @unique
   country         String?
-  gamesAsBlack    Game[]    @relation("BlackPlayer")
-  gamesAsWhite    Game[]    @relation("WhitePlayer")
   accounts        Account[]
   sessions        Session[]
+  gamesAsWhite    Game[]    @relation("WhitePlayer")
+  gamesAsBlack    Game[]    @relation("BlackPlayer")
+  profileComplete Boolean   @default(false)
+  rating          Int       @default(800)
 
-    // Appearance
+    // Friend Requests
+  sentRequests     FriendRequest[] @relation("SentRequests")
+  receivedRequests FriendRequest[] @relation("ReceivedRequests")
+
+  // Friendships
+  friendships1 Friendship[] @relation("FriendshipUser1")
+  friendships2 Friendship[] @relation("FriendshipUser2")
+
+  // Appearance
   theme String @default("light")
   language String @default("en")
 
   // Game 
   autoQueen Boolean @default(false)
   showLegalMoves Boolean @default(false)
-
   @@map("users")
 }
 
@@ -72,20 +80,68 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
+model FriendRequest {
+  id        String   @id @default(uuid())
+
+  fromId    String   @map("from_id")
+  toId      String   @map("to_id")
+
+  from      User     @relation("SentRequests", fields: [fromId], references: [id], onDelete: Cascade)
+  to        User     @relation("ReceivedRequests", fields: [toId], references: [id], onDelete: Cascade)
+
+  status    FriendRequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([fromId, toId]) // prevents duplicate requests
+  @@index([toId])
+  @@map("friend_requests")
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+model Friendship {
+  id        String   @id @default(uuid())
+
+  user1Id   String   @map("user1_id")
+  user2Id   String   @map("user2_id")
+
+  user1     User     @relation("FriendshipUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User     @relation("FriendshipUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@map("friendships")
+}
+
 model Game {
-  id         String      @id @default(uuid())
-  whiteId    String
-  blackId    String
-  status     GameStatus  @default(ONGOING)
-  winner     GameWinner?
-  fen        String
-  startedAt  DateTime    @default(now())
-  endedAt    DateTime?
-  gameResult String?
+  id String @id @default(uuid())
+
+  whiteId String
+  blackId String
+
+  white User @relation("WhitePlayer", fields: [whiteId], references: [id])
+  black User @relation("BlackPlayer", fields: [blackId], references: [id])
+
+  status GameStatus  @default(ONGOING)
+  winner GameWinner?
+
+  fen       String // snapshot cache ONLY
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
   moves      String[]
+  gameResult String?
   pgn        String?
-  black      User        @relation("BlackPlayer", fields: [blackId], references: [id])
-  white      User        @relation("WhitePlayer", fields: [whiteId], references: [id])
 
   @@index([whiteId])
   @@index([blackId])

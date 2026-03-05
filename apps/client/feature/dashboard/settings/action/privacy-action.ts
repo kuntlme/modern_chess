@@ -1,7 +1,8 @@
 "use server";
 
+import prisma from "@repo/prisma/client";
+
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/db";
 
 // export const showOnlineStatus = async (status: boolean) => {
 //   const session = await auth();

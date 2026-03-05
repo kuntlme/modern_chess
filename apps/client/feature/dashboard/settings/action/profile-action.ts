@@ -1,8 +1,8 @@
 "use server";
 
+import prisma from "@repo/prisma/client";
+
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/db";
-import { Prisma } from "@/lib/generated/prisma/client";
 
 export const changeName = async (name: string) => {
   const session = await auth();

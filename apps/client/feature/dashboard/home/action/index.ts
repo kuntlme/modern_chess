@@ -2,8 +2,9 @@
 import { formatDistanceToNow } from "date-fns";
 import { color } from "motion/react";
 
+import prisma from "@repo/prisma/client";
+
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/db";
 
 export async function getDashboardData() {
   const session = await auth();
