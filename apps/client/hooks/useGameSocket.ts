@@ -57,7 +57,7 @@ export function useGameSocket() {
       console.log("Connecting to WebSocket...", process.env.NEXT_PUBLIC_WS_URL);
 
       const WS_URL =
-        process.env.NEXT_PUBLIC_WS_URL || "wss://chess-ws-latest.onrender.com";
+        process.env.NEXT_PUBLIC_WS_URL ?? "wss://chess-ws-latest.onrender.com";
 
       const ws = new WebSocket(
         `${WS_URL}?token=${encodeURIComponent(authToken)}`
