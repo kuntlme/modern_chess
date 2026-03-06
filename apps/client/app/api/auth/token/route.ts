@@ -1,24 +1,22 @@
-import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 
 import jwt from "jsonwebtoken";
 
+import { auth } from "@/lib/auth";
+
 export async function GET(req: NextRequest) {
   try {
-    const nextAuthToken = await getToken({
-      req,
-      secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-    });
-    if (!nextAuthToken?.sub)
+    const session = await auth();
+
+    if (!session?.user?.id)
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
       });
-    const wsToken = jwt.sign(
-      { sub: nextAuthToken.sub },
-      process.env.WS_SECRET!,
-      { expiresIn: "30s" }
-    );
+
+    const wsToken = jwt.sign({ sub: session.user.id }, process.env.WS_SECRET!, {
+      expiresIn: "30s",
+    });
     return new Response(JSON.stringify({ wsToken }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
