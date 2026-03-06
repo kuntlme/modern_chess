@@ -1,7 +1,11 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import dotenv from "dotenv";
+
 import { ClientMessage } from "@/schema/clientMessageSchema";
+
+dotenv.config();
 
 // WebSocket connection status
 type ConnectionState =
