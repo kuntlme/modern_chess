@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -42,6 +43,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { getSidebarData } from "@/feature/dashboard/home/action";
 import { cn } from "@/lib/utils";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -49,6 +51,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
   const [showFooterDetails, setShowFooterDetails] = useState(open);
   const [mounted, setMounted] = useState(false);
+  const [userData, setUserData] = useState<{
+    name: string;
+    rating: number;
+  } | null>(null);
 
   const items = [
     {
@@ -91,6 +97,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   // Fix hydration mismatch - only render client-side components after mount
   useEffect(() => {
     setMounted(true);
+    getSidebarData().then(setUserData);
   }, []);
 
   useEffect(() => {
@@ -171,7 +178,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         open ? "size-10" : "size-8"
                       )}
                     >
-                      <User className="size-5 text-black" />
+                      {session?.data?.user?.image ? (
+                        <img
+                          src={session.data.user.image}
+                          alt={userData?.name || "User"}
+                          width={40}
+                          height={40}
+                          className="rounded-full object-cover"
+                        />
+                      ) : (
+                        <User className="size-5 text-black" />
+                      )}
                     </Avatar>
                     <AnimatePresence
                       onExitComplete={() => setShowFooterDetails(false)}
@@ -185,13 +202,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                           className="flex items-center justify-between gap-3"
                         >
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-md font-medium text-neutral-900/70">
-                              Player1
+                            <span className="text-md max-w-[120px] truncate font-medium text-neutral-900/70">
+                              {userData?.name || "Player"}
                             </span>
                             <div className="flex w-fit items-center justify-between gap-1 rounded-full border border-yellow-500 bg-yellow-500/30 px-2 py-0.5">
-                              <Star size={12} className="text-yellow-700" />
-                              <span className="text-xs text-yellow-700">
-                                59
+                              <Star
+                                size={12}
+                                className="fill-current text-yellow-700"
+                              />
+                              <span className="text-xs font-semibold text-yellow-700">
+                                {userData?.rating || 0}
                               </span>
                             </div>
                           </div>
@@ -200,22 +220,46 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     </AnimatePresence>
                   </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent
+                  className="flex w-[--radix-dropdown-menu-trigger-width] min-w-56 flex-col gap-1 rounded-xl p-1 pb-1.5"
+                  side="top"
+                  align="start"
+                  sideOffset={10}
+                >
+                  <DropdownMenuItem className="cursor-pointer" asChild>
+                    <Link
+                      href={`/dashboard/profile/${session.data?.user.id}`}
+                      className="flex w-full items-center"
+                    >
+                      <User className="mr-2 size-4" />
+                      <span>Show Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="m-0 bg-red-400/30 text-red-700"
+                    className="flex w-full cursor-pointer items-center bg-red-400/20 text-red-700 focus:bg-red-400/30 focus:text-red-800"
                     onClick={async () => {
                       await signOut();
                     }}
                   >
-                    <LogOut className="text-red-700" />
-                    Log Out
+                    <LogOut className="mr-2 size-4" />
+                    <span>Log Out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="flex shrink-0 items-center justify-center pb-2">
                 <Avatar className="flex size-8 shrink-0 items-center justify-center bg-neutral-300">
-                  <User className="size-5 text-black" />
+                  {session?.data?.user?.image ? (
+                    <img
+                      src={session.data.user.image}
+                      alt="User"
+                      width={32}
+                      height={32}
+                      className="rounded-full object-cover"
+                    />
+                  ) : (
+                    <User className="size-5 text-black" />
+                  )}
                 </Avatar>
               </div>
             )}

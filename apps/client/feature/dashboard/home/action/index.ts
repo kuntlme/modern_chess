@@ -44,8 +44,24 @@ export async function getDashboardData() {
         OR: [{ whiteId: userId }, { blackId: userId }],
       },
       include: {
-        white: { select: { username: true } },
-        black: { select: { username: true } },
+        white: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            image: true,
+            rating: true,
+          },
+        },
+        black: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            image: true,
+            rating: true,
+          },
+        },
       },
       orderBy: { startedAt: "desc" },
       take: 5,
@@ -56,13 +72,20 @@ export async function getDashboardData() {
       const isWhite = game.whiteId === userId;
       const color: "white" | "black" = isWhite ? "white" : "black";
 
-      const opponent: string = isWhite
-        ? game.black.username || game.blackId
-        : game.white.username || game.whiteId;
+      const opponentUser = isWhite ? game.black : game.white;
 
-      let result: "win" | "lose" | "draw";
+      const opponent = {
+        id: opponentUser.id,
+        name: opponentUser.username || opponentUser.name || "Unknown",
+        image: opponentUser.image,
+        rating: opponentUser.rating,
+      };
 
-      if (!game.winner) {
+      let result: "win" | "lose" | "draw" | "abandoned" = "draw";
+
+      if ((game as any).status === "ABANDONED" && !game.winner) {
+        result = "abandoned";
+      } else if (game.winner === "DRAW" || !game.winner) {
         result = "draw";
       } else if (
         (game.winner === "WHITE" && isWhite) ||
@@ -73,12 +96,25 @@ export async function getDashboardData() {
         result = "lose";
       }
 
+      const gameDate = new Date(game.startedAt);
       return {
         id: game.id,
         opponent,
         result,
         color,
-        date: formatDistanceToNow(game.startedAt, { addSuffix: true }),
+        duration: "10m",
+        date: gameDate.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
+        time: gameDate.toLocaleTimeString(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+        }),
+        gameResultReason: (game as any).gameResult
+          ?.toLowerCase()
+          .replace(/_/g, " "),
         ratingChange: 5,
       };
     });
@@ -94,5 +130,27 @@ export async function getDashboardData() {
   } catch (error) {
     console.error(error);
     throw new Error("Dashboard data fetch failed");
+  }
+}
+
+export async function getSidebarData() {
+  const session = await auth();
+  if (!session) return null;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { name: true, username: true, rating: true },
+    });
+
+    if (!user) return null;
+
+    return {
+      name: user.username || user.name || "Player",
+      rating: user.rating,
+    };
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }

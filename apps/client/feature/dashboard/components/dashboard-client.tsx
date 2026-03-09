@@ -53,7 +53,7 @@ export default function DashboardClient({
   ];
 
   return (
-    <div className="flex w-full flex-col items-center gap-10 py-10">
+    <div className="flex w-full flex-col items-center gap-6 py-8">
       {/* HERO */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -61,7 +61,8 @@ export default function DashboardClient({
         transition={{ duration: 0.4 }}
         className="w-full max-w-5xl"
       >
-        <Card className="bg-card shadow-lg">
+        <Card className="bg-card relative overflow-hidden border-none shadow-xl">
+          <div className="from-primary/10 to-background/50 pointer-events-none absolute inset-0 bg-gradient-to-br via-transparent" />
           <CardContent className="flex min-h-[280px] items-center justify-between p-10">
             <div className="flex-1">
               <Image
@@ -126,22 +127,16 @@ export default function DashboardClient({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex-1"
+          className="flex flex-1 flex-col gap-4"
         >
-          <Card className="bg-card shadow-md">
-            <CardContent className="p-6">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="bg-primary/10 text-primary rounded-md p-2">
-                  <ChartPie className="size-4" />
-                </div>
-                <h2 className="font-serif text-lg font-semibold">
-                  Recent Games
-                </h2>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/10 text-primary rounded-md p-2">
+              <ChartPie className="size-4" />
+            </div>
+            <h2 className="font-serif text-lg font-semibold">Recent Games</h2>
+          </div>
 
-              <DataTable data={recentGames} columns={columns} />
-            </CardContent>
-          </Card>
+          <DataTable data={recentGames} columns={columns} />
         </motion.div>
 
         {/* Online Users */}
