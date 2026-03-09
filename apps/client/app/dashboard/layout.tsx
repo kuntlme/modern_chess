@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 import {
@@ -44,43 +44,49 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
-const items = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: <LayoutDashboard />,
-  },
-  {
-    label: "Play",
-    href: "#",
-    icon: <Play />,
-  },
-  {
-    label: "Games",
-    href: "/dashboard/games",
-    icon: <Gamepad2 />,
-  },
-  {
-    label: "Analytics",
-    href: "/dashboard/analytics",
-    icon: <BarChart3 />,
-  },
-  {
-    label: "Friends",
-    href: "/dashboard/friends",
-    icon: <Users />,
-  },
-  {
-    label: "Settings",
-    href: "/dashboard/settings",
-    icon: <Settings />,
-  },
-];
-
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const session = useSession();
   const [open, setOpen] = useState(false);
   const [showFooterDetails, setShowFooterDetails] = useState(open);
   const [mounted, setMounted] = useState(false);
+
+  const items = [
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <LayoutDashboard />,
+    },
+    {
+      label: "Play",
+      href: "#",
+      icon: <Play />,
+    },
+    {
+      label: "Games",
+      href: "/dashboard/games",
+      icon: <Gamepad2 />,
+    },
+    {
+      label: "Analytics",
+      href: "/dashboard/analytics",
+      icon: <BarChart3 />,
+    },
+    {
+      label: "Friends",
+      href: "/dashboard/friends",
+      icon: <Users />,
+    },
+    {
+      label: "Settings",
+      href: "/dashboard/settings",
+      icon: <Settings />,
+    },
+    {
+      label: "Profile",
+      href: `/dashboard/profile/${session.data?.user.id}`,
+      icon: <User />,
+    },
+  ];
 
   // Fix hydration mismatch - only render client-side components after mount
   useEffect(() => {
