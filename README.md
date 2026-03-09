@@ -1,135 +1,155 @@
-# Turborepo starter
+# ♟️ Modern Chess
 
-This Turborepo starter is maintained by the Turborepo core team.
+A full-stack, real-time multiplayer chess application built with **Next.js**, **React 19**, **Tailwind CSS v4**, and **Node.js WebSockets**.
 
-## Using this example
+![Dashboard / Landing Page](./screenshots/dashboard.png)
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
-```
+## 🌟 Features
 
-## What's inside?
+- **Real-time Multiplayer:** Play chess seamlessly in real-time powered by custom WebSocket Server.
+- **Modern UI/UX:** Responsive, aesthetic design using Tailwind CSS, Radix UI, and Framer Motion.
+- **Authentication:** Secure user login via Google and GitHub with NextAuth (v5).
+- **Matchmaking & Invites:** Form lobbies or invite friends with dynamically generated links.
+- **Dashboard & Analytics:** View your recent game history, ratings, and stats on the interactive dashboard.
+- **Presence Tracking:** See who's online right now directly from the client based on global WebSocket actions.
+- **Monorepo Architecture:** Robust and scalable build setup powered by Turborepo.
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## 📸 Screenshots
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+|                 Game Board                  |                Profile & Analytics                |
+| :-----------------------------------------: | :-----------------------------------------------: |
+| ![Game Board](./screenshots/game_board.png) | ![Profile & Analytics](./screenshots/profile.png) |
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+|                Friends & Presence                |                Settings                 |
+| :----------------------------------------------: | :-------------------------------------: |
+| ![Friends & Presence](./screenshots/friends.png) | ![Settings](./screenshots/settings.png) |
 
-### Utilities
+---
 
-This Turborepo has some additional tools already setup for you:
+## 🛠️ Tech Stack
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Frontend (`apps/client`)
 
-### Build
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Library:** [React 19](https://react.dev/)
+- **UI & Styling:** [Tailwind CSS v4](https://tailwindcss.com/) & [Radix UI](https://www.radix-ui.com/)
+- **Chess Logic:** `chess.js` & `react-chessboard`
+- **Animations:** Framer Motion (`motion`)
+- **State & Data Fetching:** React Hook Form, Zod
 
-To build all apps and packages, run the following command:
+### Backend (`apps/ws_server` & API Routes)
 
-```
-cd my-turborepo
+- **WebSockets:** [ws](https://github.com/websockets/ws) for low-latency game communication
+- **Auth:** [NextAuth.js](https://next-auth.js.org/) @ 5.0.0-beta
+- **Database:** [PostgreSQL](https://www.postgresql.org/)
+- **ORM:** [Prisma](https://www.prisma.io/) (`packages/prisma`)
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+### Tooling
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+- **Monorepo:** [Turborepo](https://turbo.build/)
+- **Package Manager:** `pnpm`
+- **Linting & Formatting:** ESLint, Prettier, Husky, Lint-staged
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## 📁 Project Structure
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+This project uses Turborepo and contains the following packages and applications:
 
-### Develop
+- `apps/client`: The main Next.js web application.
+- `apps/ws_server`: The dedicated Node.js WebSocket server for chess matchmaking and gameplay.
+- `packages/prisma`: Shared Prisma ORM client and database schema.
+- `packages/ui`: Shared React components and design system (if applicable).
+- `packages/eslint-config`: Shared ESLint configurations.
+- `packages/typescript-config`: Shared `tsconfig.json`s.
 
-To develop all apps and packages, run the following command:
+---
 
-```
-cd my-turborepo
+## 🚀 Getting Started
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### Prerequisites
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+Make sure you have the following installed on your machine:
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+- **Node.js**: >= 20.19.0
+- **pnpm**: >= 9.15.0
+- **PostgreSQL**: A running instance or cloud database URL.
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+### Installation
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+1. **Clone the repository:**
 
-### Remote Caching
+   ```bash
+   git clone https://github.com/your-username/modern_chess.git
+   cd modern_chess
+   ```
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+2. **Install dependencies:**
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+   ```bash
+   pnpm install
+   ```
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+3. **Set up Environment Variables:**
+   Rename or create `.env` files in both `apps/client` and `packages/prisma` (if applicable) and paste the required keys.
 
-```
-cd my-turborepo
+   **Example `.env` in `apps/client`:**
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+   ```env
+   NEXT_PUBLIC_WS_URL=ws://localhost:8080
+   DATABASE_URL=postgresql://user:password@localhost:5432/modern_chess
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+   # NextAuth Setup
+   AUTH_SECRET=your_auth_secret_here
+   NEXT_PUBLIC_WEBSITE_URL=localhost:3000
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+   # OAuth Providers
+   GOOGLE_CLIENT_ID=your_google_id
+   GOOGLE_CLIENT_SECRET=your_google_secret
+   AUTH_GITHUB_ID=your_github_id
+   AUTH_GITHUB_SECRET=your_github_secret
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+   WS_SECRET=your_ws_secret_here
+   ```
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+4. **Initialize Database:**
+   Push the schema to your PostgreSQL database.
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
+   ```bash
+   cd packages/prisma
+   npx prisma db push
+   # and generate the client
+   npx prisma generate
+   ```
 
-## Useful Links
+5. **Start the Development Servers:**
+   From the root of the project, run the turbo dev script. This will start both the Next.js client and the WebSocket server concurrently.
 
-Learn more about the power of Turborepo:
+   ```bash
+   pnpm run dev
+   ```
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+6. **Open the Application:**
+   Visit `http://localhost:3000` in your browser.
+
+---
+
+## 🤝 Contributing
+
+Contributions are always welcome! Please follow these steps:
+
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+This project is open-source.
