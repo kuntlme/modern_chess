@@ -114,8 +114,11 @@ export function usePresence() {
       setConnectionState("connecting");
       console.log("Connecting to presence WebSocket...");
 
+      const WS_URL =
+        process.env.NEXT_PUBLIC_WS_URL || "wss://chess-ws-latest.onrender.com";
+
       const ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WS_URL}?token=${encodeURIComponent(authToken)}`
+        `${WS_URL}?token=${encodeURIComponent(authToken)}`
       );
       wsRef.current = ws;
 
