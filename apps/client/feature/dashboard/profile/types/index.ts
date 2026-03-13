@@ -8,8 +8,14 @@ export type ProfileStats = {
 };
 
 export type GameWithPlayers = Game & {
-  white: Pick<User, "id" | "name" | "image" | "rating" | "country">;
-  black: Pick<User, "id" | "name" | "image" | "rating" | "country">;
+  white: Pick<
+    User,
+    "id" | "name" | "username" | "image" | "rating" | "country"
+  >;
+  black: Pick<
+    User,
+    "id" | "name" | "username" | "image" | "rating" | "country"
+  >;
 };
 
 export type UserProfile = {

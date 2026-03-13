@@ -53,7 +53,7 @@ model User {
   profileComplete Boolean   @default(false)
   rating          Int       @default(800)
 
-    // Friend Requests
+  // Friend Requests
   sentRequests     FriendRequest[] @relation("SentRequests")
   receivedRequests FriendRequest[] @relation("ReceivedRequests")
 
@@ -62,12 +62,21 @@ model User {
   friendships2 Friendship[] @relation("FriendshipUser2")
 
   // Appearance
-  theme String @default("light")
+  theme    String @default("light")
   language String @default("en")
 
   // Game 
-  autoQueen Boolean @default(false)
+  autoQueen      Boolean @default(false)
   showLegalMoves Boolean @default(false)
+  inGameAudio    Boolean @default(true)
+  soundVolume    Int     @default(5)
+
+  // External Privacy 
+  showOnlineStatus    Boolean @default(true)
+  allowFriendRequests Boolean @default(true)
+  showRating          Boolean @default(true)
+  publicGameHistory   Boolean @default(true)
+
   @@map("users")
 }
 
@@ -81,15 +90,15 @@ model VerificationToken {
 }
 
 model FriendRequest {
-  id        String   @id @default(uuid())
+  id String @id @default(uuid())
 
-  fromId    String   @map("from_id")
-  toId      String   @map("to_id")
+  fromId String @map("from_id")
+  toId   String @map("to_id")
 
-  from      User     @relation("SentRequests", fields: [fromId], references: [id], onDelete: Cascade)
-  to        User     @relation("ReceivedRequests", fields: [toId], references: [id], onDelete: Cascade)
+  from User @relation("SentRequests", fields: [fromId], references: [id], onDelete: Cascade)
+  to   User @relation("ReceivedRequests", fields: [toId], references: [id], onDelete: Cascade)
 
-  status    FriendRequestStatus @default(PENDING)
+  status FriendRequestStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,13 +116,13 @@ enum FriendRequestStatus {
 }
 
 model Friendship {
-  id        String   @id @default(uuid())
+  id String @id @default(uuid())
 
-  user1Id   String   @map("user1_id")
-  user2Id   String   @map("user2_id")
+  user1Id String @map("user1_id")
+  user2Id String @map("user2_id")
 
-  user1     User     @relation("FriendshipUser1", fields: [user1Id], references: [id], onDelete: Cascade)
-  user2     User     @relation("FriendshipUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  user1 User @relation("FriendshipUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("FriendshipUser2", fields: [user2Id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

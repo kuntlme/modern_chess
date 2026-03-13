@@ -1,5 +1,4 @@
 import { Chess } from "chess.js";
-import { networkInterfaces } from "os";
 
 import { saveGameToDB } from "./save-to-db.js";
 import type {

@@ -8,9 +8,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Eye } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -46,12 +48,12 @@ export function GamesTable({ games, userId }: Props) {
               <Avatar className="h-10 w-10 rounded-full border">
                 <AvatarImage src={opponent?.image || ""} />
                 <AvatarFallback className="bg-primary/5 text-primary">
-                  {opponent?.name?.[0]?.toUpperCase() || "?"}
+                  {opponent?.username?.[0]?.toUpperCase() || "?"}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="font-medium">
-                  {opponent?.name || "Unknown"}
+                  {opponent?.username || "Unknown"}
                 </span>
                 <div className="mt-0.5 flex items-center gap-2">
                   <span className="text-muted-foreground mr-1 text-xs">
@@ -160,6 +162,28 @@ export function GamesTable({ games, userId }: Props) {
               })}
             </span>
           </div>
+        );
+      },
+    },
+    {
+      header: "",
+      id: "watch",
+      cell: ({ row }) => {
+        const game = row.original;
+        const isLive = game.status === "ONGOING";
+        return (
+          <Button asChild variant="outline" size="sm" className="gap-1.5">
+            <Link href={`/game/watch/${game.id}`}>
+              {isLive && (
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+              )}
+              <Eye className="h-3.5 w-3.5" />
+              {isLive ? "Watch Live" : "Review"}
+            </Link>
+          </Button>
         );
       },
     },

@@ -20,6 +20,7 @@ export async function getUserProfile(userId: string, page: number) {
             select: {
               id: true,
               name: true,
+              username: true,
               image: true,
               rating: true,
               country: true,
@@ -29,6 +30,7 @@ export async function getUserProfile(userId: string, page: number) {
             select: {
               id: true,
               name: true,
+              username: true,
               image: true,
               rating: true,
               country: true,

@@ -18,7 +18,8 @@ export function ProfileHeader({ user }: { user: User }) {
         </Avatar>
 
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold">{username}</h1>
+          <p className="text-2xl font-bold">{user.name}</p>
+          <h1 className="text-muted-foreground">@{username}</h1>
 
           <div className="flex items-center gap-2">
             <Badge variant="secondary">Rating {user.rating}</Badge>

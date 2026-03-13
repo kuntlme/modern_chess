@@ -18,7 +18,6 @@ export default async function UserProfilePage({
   const { userId } = await params;
   const resolvedSearchParams = await searchParams;
   const page = Number(resolvedSearchParams.page) || 1;
-  console.log(userId);
   const userData: UserProfile | null = await getUserProfile(userId, page);
 
   if (!userData) {

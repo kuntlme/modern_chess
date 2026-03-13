@@ -15,6 +15,8 @@ export const getUserData = async () => {
       where: { id: userId },
       select: {
         username: true,
+        name: true,
+        bio: true,
         email: true,
 
         // Appearance
@@ -24,6 +26,14 @@ export const getUserData = async () => {
         // Game
         autoQueen: true,
         showLegalMoves: true,
+        inGameAudio: true,
+        soundVolume: true,
+
+        // External Privacy
+        showOnlineStatus: true,
+        allowFriendRequests: true,
+        showRating: true,
+        publicGameHistory: true,
       },
     });
     if (!userId) {
@@ -44,10 +54,18 @@ export async function updateSettings(data: any) {
       where: { id: session.user.id },
       data: {
         username: data.username,
+        name: data.name,
+        bio: data.bio,
         email: data.email,
         theme: data.theme,
         autoQueen: data.autoQueen,
         showLegalMoves: data.showLegalMoves,
+        inGameAudio: data.inGameAudio,
+        soundVolume: data.soundVolume,
+        showOnlineStatus: data.showOnlineStatus,
+        allowFriendRequests: data.allowFriendRequests,
+        showRating: data.showRating,
+        publicGameHistory: data.publicGameHistory,
       },
     });
     if (updatedSettings) {
