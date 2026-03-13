@@ -24,6 +24,7 @@ export function gameReducer(
         fen: message.payload.fen,
         moves: message.payload.moves,
         winner: message.payload.winner,
+        reason: message.payload.reason,
         whiteId: message.payload.whiteId,
         blackId: message.payload.blackId,
       };
@@ -73,6 +74,7 @@ export function gameReducer(
         ...state,
         status: "ENDED",
         winner: message.payload.winner,
+        reason: message.payload.reason,
         yourTurn: false,
       };
     case "ERROR": {

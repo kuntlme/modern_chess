@@ -50,7 +50,7 @@ export function useGame() {
         ) {
           // Fallback to DB
           const game = await getGameFromDB(message.payload.gameId);
-
+          console.log(game);
           if (game) {
             dispatch({
               type: "DB_GAME_LOADED",
@@ -67,6 +67,7 @@ export function useGame() {
                 yourTurn: false,
                 whiteId: game.whiteId,
                 blackId: game.blackId,
+                reason: game.gameResult,
               },
             });
           }

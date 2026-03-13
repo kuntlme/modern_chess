@@ -149,7 +149,7 @@ model Game {
   endedAt   DateTime?
 
   moves      String[]
-  gameResult String?
+  gameResult String
   pgn        String?
 
   @@index([whiteId])

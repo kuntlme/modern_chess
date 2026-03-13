@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import { Loader2 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import { getPlayerById } from "../action/get-player";
@@ -17,11 +18,13 @@ type Player = {
 
 const PlayerCard = ({
   playerId,
+  color,
   isTurn,
   isGameOver,
 }: {
   playerId?: string;
   isTurn: boolean;
+  color: "w" | "b";
   isGameOver: boolean;
 }) => {
   const [player, setPlayer] = useState<Player | null>(null);
@@ -86,14 +89,25 @@ const PlayerCard = ({
 
       {/* Info */}
       <div className="flex flex-col">
-        <span
-          className={cn(
-            "text-lg font-semibold tracking-tight",
-            active ? "text-primary" : "text-foreground"
-          )}
-        >
-          {player?.username ?? "Loading..."}
-        </span>
+        <div className="flex items-center justify-center gap-2">
+          <span
+            className={cn(
+              "text-lg font-semibold tracking-tight",
+              active ? "text-primary" : "text-foreground"
+            )}
+          >
+            {player?.username ?? "Loading..."}
+          </span>
+          <Badge
+            variant={"outline"}
+            className={cn(
+              "px-2 py-0.5 text-xs",
+              color === "w" ? "bg-white text-black" : "bg-black text-white"
+            )}
+          >
+            {color === "w" ? "WHITE" : "BLACK"}
+          </Badge>
+        </div>
 
         <span className="text-muted-foreground text-sm">
           Rating: {player?.rating ?? "--"}

@@ -11,9 +11,12 @@ import {
   Check,
   Copy,
   CopyIcon,
+  Crown,
   Flag,
   Handshake,
+  RotateCcw,
   Share2,
+  Swords,
 } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -44,6 +47,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import MatchmakingLoader from "@/feature/game/component/finding-players";
+import GameResultCard from "@/feature/game/component/game-result-card";
 import { GameOverOverlay } from "@/feature/game/component/gameover-overlay";
 import PlayerCard from "@/feature/game/component/player-card";
 import { useGame } from "@/hooks/useGame";
@@ -200,6 +204,16 @@ export default function GamePage() {
                   </div>
                 </DialogContent>
               </Dialog>
+              {state.status === "ENDED" && (
+                <Button
+                  variant={"destructive"}
+                  size={"sm"}
+                  onClick={() => redirect("/dashboard")}
+                  className="cursor-pointer"
+                >
+                  Back to dashboard <ArrowRight />
+                </Button>
+              )}
               {state.status === "PLAYING" && (
                 <>
                   {/* Request for draw button */}
@@ -264,21 +278,11 @@ export default function GamePage() {
                   </AlertDialog>
                 </>
               )}
-              {state.status === "ENDED" && (
-                <Button
-                  variant={"destructive"}
-                  size={"sm"}
-                  onClick={() => redirect("/dashboard")}
-                  className="cursor-pointer"
-                >
-                  Back to dashboard <ArrowRight />
-                </Button>
-              )}
             </div>
 
             {/* Game Info Card */}
             <Card className="border-primary/10 flex flex-1 flex-col overflow-hidden border-2 shadow-lg">
-              <CardContent className="flex flex-1 flex-col space-y-6 p-6">
+              <CardContent className="flex flex-1 flex-col space-y-2 px-6">
                 {/* You */}
                 <PlayerCard
                   playerId={
@@ -286,6 +290,7 @@ export default function GamePage() {
                       ? state.whiteId
                       : state.blackId
                   }
+                  color={state.whiteId === session.data?.user.id ? "w" : "b"}
                   isTurn={state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />
@@ -297,8 +302,7 @@ export default function GamePage() {
                       Moves
                     </span>
                   </div>
-                  <Separator />
-                  <div className="flex-1 overflow-y-auto py-4">
+                  <div className="flex-1 overflow-y-auto py-1">
                     <MoveBoard
                       moves={state.moves}
                       currentMove={currentMove}
@@ -307,16 +311,27 @@ export default function GamePage() {
                   </div>
                 </div>
 
-                {/* Player 2 (You) */}
+                {/* Player 2 (Opponent) */}
                 <PlayerCard
                   playerId={
                     state.whiteId !== session.data?.user.id
                       ? state.whiteId
                       : state.blackId
                   }
+                  color={state.whiteId !== session.data?.user.id ? "w" : "b"}
                   isTurn={!state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />
+
+                {/* Result Card — shown only when game ends */}
+                {state.status === "ENDED" && gameResult && (
+                  <GameResultCard
+                    state={state}
+                    gameResult={gameResult}
+                    setShowGameOver={setShowGameOver}
+                    initGame={initGame}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>
@@ -330,6 +345,7 @@ export default function GamePage() {
         open={showGameOver}
         result={gameResult!}
         winner={state.winner}
+        reason={state.reason}
         onRestart={() => {
           setShowGameOver(false);
           initGame();

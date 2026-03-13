@@ -28,6 +28,7 @@ import MatchmakingLoader from "@/feature/game/component/finding-players";
 import { GameOverOverlay } from "@/feature/game/component/gameover-overlay";
 import { GameTopBar } from "@/feature/game/component/gametopbar";
 import PlayerCard from "@/feature/game/component/player-card";
+import GameResultCard from "@/feature/game/watch/component/game-result-card";
 import { useGame } from "@/hooks/useGame";
 import { PromotionOption } from "@/schema/clientMessageSchema";
 
@@ -169,7 +170,7 @@ export default function GamePage() {
 
             {/* Game Info Card */}
             <Card className="border-primary/10 flex flex-1 flex-col overflow-hidden border-2 shadow-lg">
-              <CardContent className="flex flex-1 flex-col space-y-6 p-6">
+              <CardContent className="flex flex-1 flex-col space-y-2 px-6">
                 {/* You */}
                 <PlayerCard
                   playerId={
@@ -177,19 +178,19 @@ export default function GamePage() {
                       ? state.whiteId
                       : state.blackId
                   }
+                  color={state.whiteId === session.data?.user.id ? "w" : "b"}
                   isTurn={state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />
 
                 {/* Moves Section */}
                 <div className="flex flex-1 flex-col overflow-hidden">
-                  <div className="mb-2 flex items-center justify-between px-2">
+                  <div className="flex items-center justify-between px-2">
                     <span className="text-muted-foreground text-sm font-bold tracking-widest uppercase">
                       Moves
                     </span>
                   </div>
-                  <Separator />
-                  <div className="flex-1 overflow-y-auto py-4">
+                  <div className="flex-1 overflow-y-auto py-1">
                     <MoveBoard
                       moves={state.moves}
                       currentMove={currentMove}
@@ -205,9 +206,17 @@ export default function GamePage() {
                       ? state.whiteId
                       : state.blackId
                   }
+                  color={state.whiteId !== session.data?.user.id ? "w" : "b"}
                   isTurn={!state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />
+                {state.status === "ENDED" && gameResult && (
+                  <GameResultCard
+                    state={state}
+                    setShowGameOver={setShowGameOver}
+                    initGame={initGame}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>
