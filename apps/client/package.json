@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@repo/prisma": "workspace:*",
+    "@repo/types": "workspace:*",
     "@auth/prisma-adapter": "^2.11.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^7.2.0",

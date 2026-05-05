@@ -3,6 +3,7 @@ export type GameState = {
   color?: "w" | "b";
   fen?: string;
   moves: string[];
+  capturedPieces: string[];
   yourTurn: boolean;
   winner?: "w" | "b" | null;
   whiteId?: string;

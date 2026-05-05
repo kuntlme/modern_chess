@@ -5,10 +5,11 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { asyncWrapProviders } from "async_hooks";
 import { Chess, Move, Square } from "chess.js";
 
+import { PromotionOption } from "@repo/types/client";
+import { ServerMessage } from "@repo/types/server";
+
 import { getGameFromDB } from "@/feature/game/action/game-from-db";
 import { gameReducer } from "@/lib/gameReducer";
-import { PromotionOption } from "@/schema/clientMessageSchema";
-import { ServerMessage } from "@/schema/serverMessageSchema";
 
 import { useGameSocket } from "./useGameSocket";
 
@@ -17,6 +18,7 @@ export function useGame() {
     status: "IDLE",
     moves: [],
     yourTurn: false,
+    capturedPieces: [],
   });
 
   // Local chess instance for client-side validation
@@ -57,6 +59,7 @@ export function useGame() {
               payload: {
                 fen: game.fen,
                 moves: game.moves,
+                capturedPieces: game.capturedPieces,
                 winner:
                   game.winner === "BLACK"
                     ? "b"

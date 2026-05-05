@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 
+import { PromotionOption } from "@repo/types/client";
+
 import GameBoard from "@/components/chessboard";
 import MoveBoard from "@/components/moveboard";
 import PromoBoard from "@/components/promoboard";
@@ -51,7 +53,6 @@ import GameResultCard from "@/feature/game/component/game-result-card";
 import { GameOverOverlay } from "@/feature/game/component/gameover-overlay";
 import PlayerCard from "@/feature/game/component/player-card";
 import { useGame } from "@/hooks/useGame";
-import { PromotionOption } from "@/schema/clientMessageSchema";
 
 export default function GamePage() {
   const session = useSession();
@@ -292,6 +293,7 @@ export default function GamePage() {
                   }
                   color={state.whiteId === session.data?.user.id ? "w" : "b"}
                   isTurn={state.yourTurn}
+                  capturedPieces={state.capturedPieces || []}
                   isGameOver={state.status === "ENDED"}
                 />
 
@@ -319,6 +321,7 @@ export default function GamePage() {
                       : state.blackId
                   }
                   color={state.whiteId !== session.data?.user.id ? "w" : "b"}
+                  capturedPieces={state.capturedPieces || []}
                   isTurn={!state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />

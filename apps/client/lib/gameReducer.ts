@@ -1,4 +1,4 @@
-import { ServerMessage } from "@/schema/serverMessageSchema";
+import { ServerMessage } from "@repo/types/server";
 
 import { GameState, GetGameFromDB } from "./types";
 
@@ -15,6 +15,7 @@ export function gameReducer(
         status: "PLAYING",
         whiteId: message.payload.whiteId,
         blackId: message.payload.blackId,
+        capturedPieces: message.payload.capturedPieces,
       };
     }
     case "DB_GAME_LOADED": {
@@ -23,6 +24,7 @@ export function gameReducer(
         status: "ENDED",
         fen: message.payload.fen,
         moves: message.payload.moves,
+        capturedPieces: message.payload.capturedPieces,
         winner: message.payload.winner,
         reason: message.payload.reason,
         whiteId: message.payload.whiteId,
@@ -40,6 +42,7 @@ export function gameReducer(
         whiteId: message.payload.whiteId,
         blackId: message.payload.blackId,
         gameId: message.payload.gameId,
+        capturedPieces: message.payload.capturedPieces,
       };
     case "RESUME_GAME":
       return {
@@ -47,6 +50,7 @@ export function gameReducer(
         color: message.payload.color,
         fen: message.payload.fen,
         moves: message.payload.moves,
+        capturedPieces: message.payload.capturedPieces,
         yourTurn: message.payload.yourTurn,
       };
     case "MOVE": {
@@ -54,6 +58,7 @@ export function gameReducer(
         ...state,
         fen: message.payload.fen,
         moves: message.payload.moves,
+        capturedPieces: message.payload.capturedPieces,
         yourTurn: !state.yourTurn,
       };
     }

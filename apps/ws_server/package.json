@@ -15,6 +15,7 @@
   "type": "module",
   "dependencies": {
     "@repo/prisma": "workspace:*",
+    "@repo/types": "workspace:*",
     "@types/ws": "^8.18.1",
     "chess.js": "^1.4.0",
     "crypto": "^1.0.1",

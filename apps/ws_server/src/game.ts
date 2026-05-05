@@ -1,15 +1,13 @@
 import { Chess } from "chess.js";
 
-import { saveGameToDB } from "./save-to-db.js";
 import type {
   ClientMessage,
   DrawResponsePayload,
   MovePayload,
-} from "./schema/clientMessageSchema.js";
-import type {
-  GameOverReason,
-  ServerMessage,
-} from "./schema/serverMessageSchema.js";
+} from "@repo/types/client";
+import type { GameOverReason, ServerMessage } from "@repo/types/server";
+
+import { saveGameToDB } from "./save-to-db.js";
 import type { DrawRequest, User } from "./types.js";
 
 type Color = "w" | "b";
@@ -27,6 +25,7 @@ export class Game {
 
   private chess: Chess;
   private moves: string[];
+  private capturedPieces: string[];
 
   private result?: gameResult;
 
@@ -48,6 +47,7 @@ export class Game {
 
     this.chess = new Chess();
     this.moves = [];
+    this.capturedPieces = [];
     this.startTime = new Date();
 
     white.gameId = id;
@@ -63,6 +63,7 @@ export class Game {
         color: "w",
         fen: this.chess.fen(),
         moves: [],
+        capturedPieces: [],
         gameId: this.id,
         whiteId: this.white.id,
         blackId: this.black.id,
@@ -75,6 +76,7 @@ export class Game {
         color: "b",
         fen: this.chess.fen(),
         moves: [],
+        capturedPieces: [],
         gameId: this.id,
         whiteId: this.white.id,
         blackId: this.black.id,
@@ -97,6 +99,9 @@ export class Game {
     let result;
     try {
       result = this.chess.move(move);
+      if (result && result.captured) {
+        this.capturedPieces.push((turn === "w" ? "b" : "w") + result.captured);
+      }
     } catch (error) {
       return this.send(user, {
         type: "ERROR",
@@ -115,6 +120,7 @@ export class Game {
         uci: uci,
         fen: this.chess.fen(),
         moves: this.moves,
+        capturedPieces: this.capturedPieces,
       },
     });
     this.checkEngineGameOver();
@@ -226,6 +232,7 @@ export class Game {
       winner: winner === "w" ? "WHITE" : winner === "b" ? "BLACK" : "DRAW",
       fen: this.chess.fen(),
       moves: this.moves,
+      capturedPieces: this.capturedPieces,
       gameResult: reason,
       pgn: this.chess.pgn(),
     });
@@ -241,6 +248,7 @@ export class Game {
       payload: {
         fen: this.chess.fen(),
         moves: this.moves,
+        capturedPieces: this.capturedPieces,
         turn: this.chess.turn(),
         whiteId: this.white.id,
         blackId: this.black.id,
@@ -263,6 +271,7 @@ export class Game {
       payload: {
         fen: this.chess.fen(),
         moves: this.moves,
+        capturedPieces: this.capturedPieces,
         color: user.id === this.white.id ? "w" : "b",
         yourTurn:
           (this.chess.turn() === "w" && user.id === this.white.id) ||

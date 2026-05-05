@@ -8,6 +8,7 @@ interface SaveGameToDBInput {
   status: "ONGOING" | "ENDED" | "ABANDONED";
   fen: string;
   moves: string[];
+  capturedPieces: string[];
   gameResult: string;
   pgn: string;
 }
@@ -20,6 +21,7 @@ export const saveGameToDB = async ({
   status,
   fen,
   moves,
+  capturedPieces,
   gameResult,
   pgn,
 }: SaveGameToDBInput): Promise<any> => {
@@ -36,6 +38,7 @@ export const saveGameToDB = async ({
         winner,
         fen,
         moves,
+        capturedPieces,
         gameResult,
         pgn,
         endedAt: new Date(),

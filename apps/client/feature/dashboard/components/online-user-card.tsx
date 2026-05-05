@@ -5,12 +5,13 @@ import React, { useEffect, useState } from "react";
 import { Circle, Clock, Gamepad2, User, Users } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
+import { OnlineUser } from "@repo/types/server";
+
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePresence } from "@/hooks/usePresence";
 import { cn } from "@/lib/utils";
-import { OnlineUser } from "@/schema/serverMessageSchema";
 
 interface OnlineUserCardProps {
   users: OnlineUser[];

@@ -4,8 +4,9 @@ import { Chessboard, ChessboardOptions } from "react-chessboard";
 
 import { Chess, Move, Square } from "chess.js";
 
+import { PromotionOption } from "@repo/types/client";
+
 import { GameState } from "@/lib/types";
-import { PromotionOption } from "@/schema/clientMessageSchema";
 
 function GameBoard({
   state,

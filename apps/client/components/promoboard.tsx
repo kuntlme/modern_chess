@@ -7,7 +7,7 @@ import {
   ChessRookIcon,
 } from "lucide-react";
 
-import { PromotionOption } from "@/schema/clientMessageSchema";
+import { PromotionOption } from "@repo/types/client";
 
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent } from "./ui/dialog";

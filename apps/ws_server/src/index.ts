@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { WebSocketServer } from "ws";
 
+import { ClientMessageSchema } from "@repo/types/client";
+
 import { GameManager } from "./game-manager.js";
-import { ClientMessageSchema } from "./schema/clientMessageSchema.js";
 import type { User } from "./types.js";
 
 dotenv.config();

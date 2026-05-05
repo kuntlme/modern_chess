@@ -17,6 +17,7 @@ export const WatchGameSchema = z.object({
   payload: z.object({
     fen: z.string(),
     moves: z.array(z.string()),
+    capturedPieces: z.array(z.string()),
     turn: z.enum(["w", "b"]),
     whiteId: z.string(),
     blackId: z.string(),
@@ -29,6 +30,7 @@ export const InitGameSchema = z.object({
     color: z.enum(["w", "b"]),
     fen: z.string(),
     moves: z.array(z.string()),
+    capturedPieces: z.array(z.string()),
     gameId: z.uuid(),
     whiteId: z.string(),
     blackId: z.string(),
@@ -41,6 +43,7 @@ export const MoveSchema = z.object({
     uci: z.string(),
     fen: z.string(),
     moves: z.array(z.string()),
+    capturedPieces: z.array(z.string()),
   }),
 });
 
@@ -50,6 +53,7 @@ export const ResumeGameSchema = z.object({
     color: z.enum(["w", "b"]),
     fen: z.string(),
     moves: z.array(z.string()),
+    capturedPieces: z.array(z.string()),
     yourTurn: z.boolean(),
     gameId: z.uuid(),
   }),

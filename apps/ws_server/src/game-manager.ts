@@ -1,8 +1,9 @@
 import { randomUUID } from "crypto";
 
+import type { ClientMessage } from "@repo/types/client";
+import type { ServerMessage } from "@repo/types/server";
+
 import { Game } from "./game.js";
-import type { ClientMessage } from "./schema/clientMessageSchema.js";
-import type { ServerMessage } from "./schema/serverMessageSchema.js";
 import { type User } from "./types.js";
 
 export class GameManager {

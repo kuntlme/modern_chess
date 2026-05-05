@@ -7,6 +7,8 @@ import { redirect, useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, CopyIcon, Share2 } from "lucide-react";
 import { motion } from "motion/react";
 
+import { PromotionOption } from "@repo/types/client";
+
 import GameBoard from "@/components/chessboard";
 import MoveBoard from "@/components/moveboard";
 import PromoBoard from "@/components/promoboard";
@@ -30,7 +32,6 @@ import { GameTopBar } from "@/feature/game/component/gametopbar";
 import PlayerCard from "@/feature/game/component/player-card";
 import GameResultCard from "@/feature/game/watch/component/game-result-card";
 import { useGame } from "@/hooks/useGame";
-import { PromotionOption } from "@/schema/clientMessageSchema";
 
 interface Params {
   gameId: string;
@@ -179,6 +180,7 @@ export default function GamePage() {
                       : state.blackId
                   }
                   color={state.whiteId === session.data?.user.id ? "w" : "b"}
+                  capturedPieces={state.capturedPieces || []}
                   isTurn={state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />
@@ -207,6 +209,7 @@ export default function GamePage() {
                       : state.blackId
                   }
                   color={state.whiteId !== session.data?.user.id ? "w" : "b"}
+                  capturedPieces={state.capturedPieces || []}
                   isTurn={!state.yourTurn}
                   isGameOver={state.status === "ENDED"}
                 />

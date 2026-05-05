@@ -148,9 +148,10 @@ model Game {
   startedAt DateTime  @default(now())
   endedAt   DateTime?
 
-  moves      String[]
-  gameResult String
-  pgn        String?
+  moves          String[]
+  capturedPieces String[]
+  gameResult     String
+  pgn            String?
 
   @@index([whiteId])
   @@index([blackId])

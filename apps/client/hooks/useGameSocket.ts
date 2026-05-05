@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ClientMessage } from "@/schema/clientMessageSchema";
+import { ClientMessage } from "@repo/types/client";
 
 // WebSocket connection status
 type ConnectionState =

@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { OnlineUser, ServerMessage } from "@/schema/serverMessageSchema";
+import { OnlineUser, ServerMessage } from "@repo/types/server";
 
 // WebSocket connection status
 type ConnectionState =

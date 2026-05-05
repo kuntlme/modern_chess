@@ -19,12 +19,14 @@ type Player = {
 const PlayerCard = ({
   playerId,
   color,
+  capturedPieces,
   isTurn,
   isGameOver,
 }: {
   playerId?: string;
   isTurn: boolean;
   color: "w" | "b";
+  capturedPieces: string[];
   isGameOver: boolean;
 }) => {
   const [player, setPlayer] = useState<Player | null>(null);
@@ -112,6 +114,20 @@ const PlayerCard = ({
         <span className="text-muted-foreground text-sm">
           Rating: {player?.rating ?? "--"}
         </span>
+
+        <div className="flex gap-1">
+          {Array.isArray(capturedPieces) &&
+            capturedPieces
+              .filter((piece) => piece.startsWith(color))
+              .map((piece) => (
+                <Image
+                  src={`/pieces/${piece.split("").join("_")}.png`}
+                  height={15}
+                  width={15}
+                  alt=""
+                />
+              ))}
+        </div>
       </div>
     </div>
   );
