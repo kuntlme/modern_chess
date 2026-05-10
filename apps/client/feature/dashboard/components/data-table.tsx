@@ -5,16 +5,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowRight, CircleUserRound, Eye, ScanEye } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -62,7 +53,7 @@ const DataTable = <T,>({
           table.getRowModel().rows.map((row) => (
             <TableRow
               key={row.id}
-              className="hover: bg-muted/50 transition-colors"
+              className="hover:bg-muted/50 transition-colors"
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>

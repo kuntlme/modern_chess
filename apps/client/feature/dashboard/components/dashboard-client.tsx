@@ -62,7 +62,7 @@ export default function DashboardClient({
         className="w-full max-w-5xl"
       >
         <Card className="bg-card relative overflow-hidden border-none shadow-xl">
-          <div className="from-primary/10 to-background/50 pointer-events-none absolute inset-0 bg-gradient-to-br via-transparent" />
+          <div className="from-primary/10 to-background/50 pointer-events-none absolute inset-0 bg-linear-to-br via-transparent" />
           <CardContent className="flex min-h-[280px] items-center justify-between p-10">
             <div className="flex-1">
               <Image

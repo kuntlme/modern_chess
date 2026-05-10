@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export type GameList = {
   id: string;
@@ -136,15 +137,18 @@ export const columns: ColumnDef<GameList>[] = [
     header: () => <div className="text-muted-foreground">Rating</div>,
     cell: ({ row }) => {
       const change = row.original.ratingChange;
-      const positive = change > 0;
+      const positive = row.original.result === "win" ? true : false;
 
       return (
         <span
-          className={`text-sm font-semibold ${
-            positive ? "text-primary" : "text-destructive"
-          }`}
+          className={cn(
+            "text-sm font-semibold",
+            row.original.result === "win" && "text-green-500",
+            row.original.result === "lose" && "text-destructive",
+            row.original.result === "draw" && "text-muted-foreground"
+          )}
         >
-          {positive ? `+${change}` : change}
+          {change === 0 ? change : positive ? `+${change}` : `-${change}`}
         </span>
       );
     },

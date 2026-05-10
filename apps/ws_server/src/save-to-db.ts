@@ -40,8 +40,13 @@ export const saveGameToDB = async ({
         moves,
         capturedPieces,
         gameResult,
+        RatingCount: 0,
         pgn,
         endedAt: new Date(),
+      },
+      include: {
+        white: true,
+        black: true,
       },
     });
     return createdGame;

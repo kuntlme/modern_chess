@@ -115,7 +115,7 @@ export async function getDashboardData() {
         gameResultReason: (game as any).gameResult
           ?.toLowerCase()
           .replace(/_/g, " "),
-        ratingChange: 5,
+        ratingChange: game.RatingCount,
       };
     });
 

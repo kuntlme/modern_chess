@@ -1,5 +1,6 @@
 import { Chess } from "chess.js";
 
+import type { Game as GameType, User as UserType } from "@repo/prisma/types";
 import type {
   ClientMessage,
   DrawResponsePayload,
@@ -9,8 +10,14 @@ import type { GameOverReason, ServerMessage } from "@repo/types/server";
 
 import { saveGameToDB } from "./save-to-db.js";
 import type { DrawRequest, User } from "./types.js";
+import { updateRating, updateRatingToDB } from "./update-rating.js";
 
 type Color = "w" | "b";
+
+type GameResult = GameType & {
+  white: UserType;
+  black: UserType;
+};
 
 interface gameResult {
   reason: GameOverReason;
@@ -212,7 +219,7 @@ export class Game {
     }
   }
 
-  private endGame(reason: GameOverReason, winner: Color | null) {
+  private async endGame(reason: GameOverReason, winner: Color | null) {
     if (this.result) return;
     this.result = {
       reason,
@@ -224,18 +231,43 @@ export class Game {
       payload: { reason, winner },
     });
 
-    saveGameToDB({
-      gameId: this.id,
-      whiteId: this.white.id,
-      blackId: this.black.id,
-      status: "ENDED",
-      winner: winner === "w" ? "WHITE" : winner === "b" ? "BLACK" : "DRAW",
-      fen: this.chess.fen(),
-      moves: this.moves,
-      capturedPieces: this.capturedPieces,
-      gameResult: reason,
-      pgn: this.chess.pgn(),
-    });
+    try {
+      // save game to db
+      const gameResult = await saveGameToDB({
+        gameId: this.id,
+        whiteId: this.white.id,
+        blackId: this.black.id,
+        status: "ENDED",
+        winner: winner === "w" ? "WHITE" : winner === "b" ? "BLACK" : "DRAW",
+        fen: this.chess.fen(),
+        moves: this.moves,
+        capturedPieces: this.capturedPieces,
+        gameResult: reason,
+        pgn: this.chess.pgn(),
+      });
+
+      if (!gameResult) {
+        throw Error("Error in saving game in DB");
+      }
+
+      // update rating of the players
+      const newRating = updateRating(
+        gameResult.white.rating,
+        gameResult.black.rating,
+        gameResult.winner === "WHITE"
+          ? 1
+          : gameResult.winner === "BLACK"
+            ? 0
+            : 0.5
+      );
+
+      // save updated rating to DB
+      updateRatingToDB(
+        { id: gameResult.whiteId, rating: newRating.newW },
+        { id: gameResult.blackId, rating: newRating.newB },
+        { id: gameResult.id, ratingCount: newRating.ratingCount }
+      );
+    } catch (error) {}
 
     this.onGameOver(this.id);
   }
